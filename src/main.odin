@@ -2,74 +2,77 @@ package main
 
 import "core:fmt"
 import "core:mem"
+import "core:os"
 import rl "vendor:raylib"
 
 main :: proc() {
-    // create a tracking allocator 
-    // track all memory allocations and deallocations
-    tracking_allocator: mem.Tracking_Allocator
-    mem.tracking_allocator_init(&tracking_allocator, context.allocator)
-    context.allocator = mem.tracking_allocator(&tracking_allocator)
+	// set path to be consistent
+	//os.set_working_directory("..")
 
-    // 
-    reset_tracking_alloc :: proc(alloc: ^mem.Tracking_Allocator) -> bool 
-    {
-        leaks := false
-        for key, value in alloc.allocation_map {
-            fmt.printf("%v: leaked %v bytes\n", value.location, value.size)
-            leaks = true
-        }
+	// create a tracking allocator
+	// track all memory allocations and deallocations
+	tracking_allocator: mem.Tracking_Allocator
+	mem.tracking_allocator_init(&tracking_allocator, context.allocator)
+	context.allocator = mem.tracking_allocator(&tracking_allocator)
 
-        mem.tracking_allocator_clear(alloc)
-        return leaks
-    }
+	//
+	reset_tracking_alloc :: proc(alloc: ^mem.Tracking_Allocator) -> bool {
+		leaks := false
+		for key, value in alloc.allocation_map {
+			fmt.printf("%v: leaked %v bytes\n", value.location, value.size)
+			leaks = true
+		}
 
-    // raylib init
-    SCREEN_WIDTH :: 800.0
-    SCREEN_HEIGHT :: 600.0
-    TITLE :: "ROLI"
+		mem.tracking_allocator_clear(alloc)
+		return leaks
+	}
 
-    // window size and title
-    rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE)
-    defer rl.CloseWindow()
+	// raylib init
+	SCREEN_WIDTH :: 800.0
+	SCREEN_HEIGHT :: 600.0
+	TITLE :: "ROLI"
 
-    // window and taskbar icon
-    icon: rl.Image = rl.LoadImage("Z:/code/ghsh/assets/textures/icon_heart.png")
-    rl.SetWindowIcon(icon)
-    defer rl.UnloadImage(icon)
+	// window size and title
+	rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE)
+	defer rl.CloseWindow()
 
-    rl.SetTargetFPS(60)
+	// window and taskbar icon
+	icon: rl.Image = rl.LoadImage("assets/textures/icon_heart.png")
+	rl.SetWindowIcon(icon)
+	defer rl.UnloadImage(icon)
 
-    // start a game instance
-    game := init_game()
+	rl.SetTargetFPS(60)
 
-    // on close
-    defer {
-        // get rid of game instance (safely remove memory)
-        deinit_game(&game)
+	// start a game instance
+	game := init_game()
 
-        // check the tracking allocator for leaks - if true - leaks exist and have been printed
-        if reset_tracking_alloc(&tracking_allocator) {
-            fmt.println("MEMORY INFO: Memory leaks detected!")
-        } else {
-            fmt.println("MEMORY INFO: No memory leaks detected!")
-        }
-    }
+	// on close
+	defer {
+		// get rid of game instance (safely remove memory)
+		deinit_game(&game)
 
-    // game loop
-    for !rl.WindowShouldClose() {
-        delta_time := rl.GetFrameTime()
+		// check the tracking allocator for leaks - if true - leaks exist and have been printed
+		if reset_tracking_alloc(&tracking_allocator) {
+			fmt.println("MEMORY INFO: Memory leaks detected!")
+		} else {
+			fmt.println("MEMORY INFO: No memory leaks detected!")
+		}
+	}
 
-        // update world
-        update_game(&game, delta_time)
+	// game loop
+	for !rl.WindowShouldClose() {
+		delta_time := rl.GetFrameTime()
 
-        rl.BeginDrawing()
+		// update world
+		update_game(&game, delta_time)
 
-        rl.ClearBackground({160, 200, 255, 255})
+		rl.BeginDrawing()
 
-        // draw world
-        draw_game(&game)
+		rl.ClearBackground({160, 200, 255, 255})
 
-        rl.EndDrawing()
-    }
+		// draw world
+		draw_game(&game)
+
+		rl.EndDrawing()
+	}
 }
