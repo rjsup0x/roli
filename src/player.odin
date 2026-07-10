@@ -83,30 +83,27 @@ update_player :: proc(player: ^Player, input: ^Input, delta_time: f32, tile_map:
 
     update_player_movement(player, input, delta_time)
 
+    check_horizontal_collision(player, tile_map)
+
     update_jump(player, input)
 
     apply_physics(player, delta_time)
 
-    // update thje player bounds
+    check_ground(player, tile_map)
+
     player.bounds.x = player.position.x
     player.bounds.y = player.position.y
 
-    check_ground(player, tile_map)
-
     update_animation(player, delta_time)
-
-
     // update_combat(player, input)
 }
 
 // player movement subject to input device
-update_player_movement :: proc(player: ^Player, input: ^Input, delta_time: f32) 
+update_player_movement :: proc(player: ^Player, input: ^Input, delta_time: f32)
 {
-    // players velocity is updated by input type on the x axis * players speed
-    // left right movement
     player.velocity.x = input.move_x * player.speed
 
-    // whether the player is facing right or left
+
     if input.move_x > 0 {
         player.facing_right = true
     }
@@ -115,7 +112,7 @@ update_player_movement :: proc(player: ^Player, input: ^Input, delta_time: f32)
         player.facing_right = false
     }
 
-    // player pyhiscs chnage
+
     player.position.x += player.velocity.x * delta_time
 }
 

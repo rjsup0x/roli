@@ -2,7 +2,7 @@
 ===                           PROJECT ROLI GOALS                              ===
 =================================================================================
 
-- Create a 2D platformer (like mario) with enemies to avoid, objects to pick up (health, skills etc), seperate level to complete with escalating difficulty.
+- Create a 2D platformer (like mario) with enemies to avoid, objects to pick up (health, skills etc), seperate levels to complete with escalating difficulty.
 
 =================================================================================
 ===                          IDEAS/TODO                                       ===
@@ -15,7 +15,6 @@
 # enemy
 - [] different types of enemies
 - [] drop lifes and items on death
-
 
 # object
 - [] init an object (health struct) with its data and bring it into world as array of objects
@@ -34,9 +33,9 @@
 - [] sound effects - jump - double jump - death etc
 
 # tilemap
-- [] tilemap can handle multiple layers
 - [] tilemap can handle multiple objects states ("collidable" atm)
 - [] tilemap tells about multiple objects - spawn positions etc
+- [] tilemap object for end pos - resulting in change level (like a flag you reached)
 
 =================================================================================
 ===                      DONE                                                 ===
@@ -78,6 +77,7 @@
 
 # tilemap
 - [x] load tilemap by reading json
+- [x] tilemap can handle multiple layers
 
 # physics
 - [x] player is grounded

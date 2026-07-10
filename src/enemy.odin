@@ -6,6 +6,7 @@ Enemy :: struct {
     start_position: rl.Vector2,
     patrol_distance: f32,
     moving_left: bool,
+    previous_position: rl.Vector2,
     velocity: rl.Vector2,
     facing_right: bool,
     animation_state: Animation_State,
@@ -24,6 +25,9 @@ init_enemy :: proc(texture: rl.Texture2D, position: rl.Vector2) -> Enemy
     enemy := Enemy{
         patrol_distance = 150,
         moving_left = true,
+
+        velocity = { 0, 0 },
+        previous_position = position,
 
         bounds = rl.Rectangle{
             width = 32,
@@ -50,14 +54,16 @@ init_enemy :: proc(texture: rl.Texture2D, position: rl.Vector2) -> Enemy
 
 update_enemy :: proc(enemy: ^Enemy, delta_time: f32, tile_map: ^Tile_Map) 
 {
-    update_enemy_movement(enemy, delta_time)
+    enemy.previous_position = enemy.position
 
-    enemy.bounds.x = enemy.position.x
-    enemy.bounds.y = enemy.position.y
+    update_enemy_movement(enemy, delta_time)
 
     apply_physics(enemy, delta_time)
 
     check_ground(enemy, tile_map)
+
+    enemy.bounds.x = enemy.position.x
+    enemy.bounds.y = enemy.position.y
 
     update_animation(enemy, delta_time)
 }

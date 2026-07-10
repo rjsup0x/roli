@@ -36,7 +36,38 @@ check_player_enemy_collisions :: proc(player: ^Player, enemies: ^[dynamic]Enemy)
     return false
 }
 
+check_horizontal_collision :: proc(object: ^$T, tile_map: ^Tile_Map)
+{
+    object_rect := rl.Rectangle{
+        object.position.x,
+        object.position.y,
+        32,
+        32,
+    }
+
+    for collision in tile_map.collisions {
+        if rl.CheckCollisionRecs(object_rect, collision) {
+            // moving right into wall
+            if object.velocity.x > 0 {
+
+                object.position.x = collision.x - 32
+            }
+
+            // moving left into wall
+            if object.velocity.x < 0 {
+
+                object.position.x = collision.x + collision.width
+            }
+            object.velocity.x = 0
+
+            break
+        }
+    }
+}
+
 damage_player :: proc(player: ^Player) {
+    DAMAGE_COOLDOWN :: 1.0
+    
     // player not alive do nothing
     if !player.is_alive {
         return
@@ -51,7 +82,7 @@ damage_player :: proc(player: ^Player) {
     player.lives -= 1
 
     // damage cooldown active for 1 min
-    player.damage_cooldown = 1.0 // 1 second invincibility
+    player.damage_cooldown = DAMAGE_COOLDOWN // 1 second invincibility
 
     // if player has no more lives
     if player.lives <= 0 {
