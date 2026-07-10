@@ -2,7 +2,7 @@ package main
 
 import "core:fmt"
 import "core:mem"
-import "core:os"
+// import "core:os"
 import rl "vendor:raylib"
 
 main :: proc() {
@@ -37,7 +37,7 @@ main :: proc() {
 	defer rl.CloseWindow()
 
     // window and taskbar icon
-    icon: rl.Image = rl.LoadImage("Z:/code/ghsh/assets/textures/icon_heart.png")
+    icon: rl.Image = rl.LoadImage("assets/textures/icon_heart.png")
     rl.SetWindowIcon(icon)
     defer rl.UnloadImage(icon)
 
@@ -70,7 +70,7 @@ main :: proc() {
 
 		rl.BeginDrawing()
 
-		rl.ClearBackground({160, 200, 255, 255})
+		rl.ClearBackground(rl.SKYBLUE)
 
 		// draw world
 		draw_game(&game)

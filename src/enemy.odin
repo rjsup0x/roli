@@ -15,6 +15,8 @@ Enemy :: struct {
     texture: rl.Texture2D,
     grounded: bool,
     jumps_remaining: i32, 
+    damage: i32,
+    is_alive: bool,
 }
 
 init_enemy :: proc(texture: rl.Texture2D, position: rl.Vector2) -> Enemy 
@@ -37,6 +39,8 @@ init_enemy :: proc(texture: rl.Texture2D, position: rl.Vector2) -> Enemy
             frame_count = 4,
             frame_time = 0.15,
         },
+        damage = 1,
+        is_alive = true,
         position = position,
         texture = texture,
     }

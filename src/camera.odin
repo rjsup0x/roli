@@ -46,7 +46,7 @@ init_camera :: proc(player: ^Player) -> Camera_Controller
     return cam
 }
 
-update_camera :: proc(cam: ^Camera_Controller, player: ^Player, dt: f32)
+update_camera :: proc(cam: ^Camera_Controller, player: ^Player, delta_time: f32)
 {
     //--------------------------------------------------
     // Tunables
@@ -130,14 +130,14 @@ update_camera :: proc(cam: ^Camera_Controller, player: ^Player, dt: f32)
     //--------------------------------------------------
 
     accel := (cam.target.x - cam.focus.x) * STIFFNESS
-    cam.velocity.x += accel * dt
-    cam.velocity.x *= math.exp(-DAMPING * dt)
-    cam.focus.x += cam.velocity.x * dt
+    cam.velocity.x += accel * delta_time
+    cam.velocity.x *= math.exp(-DAMPING * delta_time)
+    cam.focus.x += cam.velocity.x * delta_time
 
     accel = (cam.target.y - cam.focus.y) * STIFFNESS
-    cam.velocity.y += accel * dt
-    cam.velocity.y *= math.exp(-DAMPING * dt)
-    cam.focus.y += cam.velocity.y * dt
+    cam.velocity.y += accel * delta_time
+    cam.velocity.y *= math.exp(-DAMPING * delta_time)
+    cam.focus.y += cam.velocity.y * delta_time
 
     //--------------------------------------------------
     // Clamp to world bounds

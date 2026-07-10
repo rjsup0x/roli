@@ -52,14 +52,3 @@ check_ground :: proc(object: ^$T, tile_map: ^Tile_Map)
         }
     }
 }
-
-check_collision :: proc(player: ^Player, enemies: ^[dynamic]Enemy) -> bool 
-{
-    for enemy in enemies^ {
-        if rl.CheckCollisionRecs(player.bounds, enemy.bounds) {
-            return true
-        }
-    }
-
-    return false
-}

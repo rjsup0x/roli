@@ -69,6 +69,11 @@ update_playing_screen :: proc(game: ^Game, delta_time: f32)
         update_input(&game.input)
          // update all game instance logic - players, enemies, other entities etc
         update_world(&game.world, &game.input, delta_time)
+
+        // if the player has no more lives its gameover
+        if !game.world.player.is_alive {
+            game.screen = .GAMEOVER
+        }
 }
 
 update_pause_screen :: proc(game: ^Game)
@@ -126,14 +131,12 @@ draw_game :: proc(game: ^Game)
             draw_menu()
             
         case .PLAYING:
-            // draw all game instance objects - player, enemy, doors whatevr
-            draw_world(&game.world)
+            draw_world(&game.world, &game.assets)
 
         case .GAMEOVER:
             draw_gameover()
 
         case .PAUSE:
             draw_pause()
-
     }
 }

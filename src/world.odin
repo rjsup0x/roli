@@ -127,7 +127,7 @@ update_world :: proc(world: ^World, input: ^Input, delta_time: f32) {
 	}
 
 	// if player and an enemy collide - handle that
-	if check_collision(&world.player, &world.enemies) {
+	if check_player_enemy_collisions(&world.player, &world.enemies) {
 		// Handle collision
 		fmt.println("player and enemy colided")
 	}
@@ -137,7 +137,7 @@ update_world :: proc(world: ^World, input: ^Input, delta_time: f32) {
 }
 
 // draw all assets and things happening in the world
-draw_world :: proc(world: ^World) {
+draw_world :: proc(world: ^World, assets: ^Assets) {
 	rl.BeginMode2D(world.camera.camera)
 
 	// debug checks
@@ -162,8 +162,13 @@ draw_world :: proc(world: ^World) {
 
 	// draw each enemy in the enemy array
 	for &enemy in world.enemies {
-		draw_enemy(&enemy)
+		if enemy.is_alive {
+			draw_enemy(&enemy)
+		}
 	}
 
 	rl.EndMode2D()
+
+	// hud space - outside cam
+	draw_player_hearts(&world.player, assets.heart_texture)
 }

@@ -1,43 +1,42 @@
-## project roli goal
+=================================================================================
+===                           PROJECT ROLI GOALS                              ===
+=================================================================================
 
 - Create a 2D platformer (like mario) with enemies to avoid, objects to pick up (health, skills etc), seperate level to complete with escalating difficulty.
 
-## ideas
+=================================================================================
+===                          IDEAS/TODO                                       ===
+=================================================================================
+
 # player
-- [] player has 3 bars of health
-- [] if player collides with enemy -1 bar of health
 - [] if player falls of map = death
 - [?] player can shoot
-- [] player can die
 
 # enemy
-- [] enemy has health
-- [] enemy can die
-- [] player bouncing on enemy head kils enemy
+
 
 # object
 - [] init an object (health struct) with its data and bring it into world as array of objects
 
 # screen
-- [] make individual screens for (.menu .pause . gameover)
-- [] update the individual screens logic per screen
+- [] make each individual screen with update and click logic - add buttons that can be pressed and do something
 
 # game
-- [] handle screen navigations properly
+
 
 # world
 - [] dead enemy drops health or object (health, skill, etc)
-- [] had array of objects
+- [] hold array of objects
 - [] handle multiple level
-- [] handle multiple screens with the screen state from game
 
 # tilemap
 - [] tilemap can handle multiple layers
 - [] tilemap can handle multiple objects states ("collidable" atm)
 
 =================================================================================
+===                      DONE                                                 ===
+=================================================================================
 
-## done
 # main
 - [x] tracking allocator to track memory allcoations - tell about leaks
 - [x] 
@@ -51,6 +50,9 @@
 - [x] player animations - per direction
 - [x] player movement
 - [x] player physics (basic) - put object on floor, check they are on floor
+- [x] player can die
+- [x] player has 3 bars of health
+- [x] if player collides with enemy -1 bar of health
 
 # enemy
 - [x] enemy object + init
@@ -58,6 +60,9 @@
 - [x] basic enemy walking ai
 - [x] enemy animations - per direction
 - [x] enemy physics (basic) - put object on floor, check they are on floor
+- [x] enemy has health
+- [x] enemy can die
+- [x] player bouncing on enemy head kils enemy
 
 # camera
 - [x] camera init + follow player
@@ -69,16 +74,25 @@
 - [x] load tilemap by reading json
 
 # physics
+- [x] player is grounded
+- [x] player can jump
+- [x] enemy is grounded
+
+# collisions
 - [x] collision check between enemy and player
+- [x] player jump on enemy head enemy dies
+- [x] player and enemy collision causes enemy to lose 1 life
 
 # screen
 - [x] make a screen state struct
+- [x] make individual screens for (.menu .pause . gameover)
 
 # game
 - [x] game owning the application lifetime
 - [x] game update
 - [x] game draw
 - [x] handle different screen states
+- [x] handle screen navigations properly
 
 # world
 - [x] spawn player, enemy
@@ -86,3 +100,8 @@
 - [x] draw map from tilemap
 - [x] update world instance of player, enemeis, camera
 - [x] draw world instances of map, player, enemy
+
+# ui
+- [x] players health is displayed by heart texture
+- [x] player hearts = player lives
+- [x] player loses heart when losing life
