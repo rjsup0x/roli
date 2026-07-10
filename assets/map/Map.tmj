@@ -49,7 +49,7 @@
         {
          "columns":11,
          "firstgid":1,
-         "image":"Z:/code/ghsh/assets/textures/Terrain.png",
+         "image":"assets/textures/Terrain.png",
          "imageheight":176,
          "imagewidth":352,
          "margin":0,
@@ -58,11 +58,11 @@
          "tilecount":55,
          "tileheight":32,
          "tilewidth":32
-        }, 
+        },
         {
          "columns":1,
          "firstgid":56,
-         "image":"Z:/code/ghsh/assets/textures/Idle.png",
+         "image":"assets/textures/Idle.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
