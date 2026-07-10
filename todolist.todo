@@ -1,0 +1,88 @@
+## project roli goal
+
+- Create a 2D platformer (like mario) with enemies to avoid, objects to pick up (health, skills etc), seperate level to complete with escalating difficulty.
+
+## ideas
+# player
+- [] player has 3 bars of health
+- [] if player collides with enemy -1 bar of health
+- [] if player falls of map = death
+- [?] player can shoot
+- [] player can die
+
+# enemy
+- [] enemy has health
+- [] enemy can die
+- [] player bouncing on enemy head kils enemy
+
+# object
+- [] init an object (health struct) with its data and bring it into world as array of objects
+
+# screen
+- [] make individual screens for (.menu .pause . gameover)
+- [] update the individual screens logic per screen
+
+# game
+- [] handle screen navigations properly
+
+# world
+- [] dead enemy drops health or object (health, skill, etc)
+- [] had array of objects
+- [] handle multiple level
+- [] handle multiple screens with the screen state from game
+
+# tilemap
+- [] tilemap can handle multiple layers
+- [] tilemap can handle multiple objects states ("collidable" atm)
+
+=================================================================================
+
+## done
+# main
+- [x] tracking allocator to track memory allcoations - tell about leaks
+- [x] 
+
+# assets
+- [x] asset loading
+
+# player
+- [x] player object + init
+- [X] player update + draw
+- [x] player animations - per direction
+- [x] player movement
+- [x] player physics (basic) - put object on floor, check they are on floor
+
+# enemy
+- [x] enemy object + init
+- [x] enemy update + draw
+- [x] basic enemy walking ai
+- [x] enemy animations - per direction
+- [x] enemy physics (basic) - put object on floor, check they are on floor
+
+# camera
+- [x] camera init + follow player
+
+# input
+- [x] input handling (keyboard, controller) 
+
+# tilemap
+- [x] load tilemap by reading json
+
+# physics
+- [x] collision check between enemy and player
+
+# screen
+- [x] make a screen state struct
+
+# game
+- [x] game owning the application lifetime
+- [x] game update
+- [x] game draw
+- [x] handle different screen states
+
+# world
+- [x] spawn player, enemy
+- [x] init camera to players world pos
+- [x] draw map from tilemap
+- [x] update world instance of player, enemeis, camera
+- [x] draw world instances of map, player, enemy

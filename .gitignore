@@ -26,3 +26,4 @@ Thumbs.db
 .vscode/*.db
 
 config/game.json
+info.txt

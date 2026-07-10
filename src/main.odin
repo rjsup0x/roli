@@ -38,6 +38,8 @@ main :: proc() {
     rl.SetWindowIcon(icon)
     defer rl.UnloadImage(icon)
 
+    rl.SetExitKey(.KP_ADD)
+
     rl.SetTargetFPS(60)
 
     // start a game instance
