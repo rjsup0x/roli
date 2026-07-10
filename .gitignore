@@ -24,3 +24,5 @@ Thumbs.db
 # VS Code cache
 .vscode/ipch/
 .vscode/*.db
+
+config/game.json

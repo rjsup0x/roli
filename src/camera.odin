@@ -46,7 +46,7 @@ init_camera :: proc(player: ^Player) -> Camera_Controller
     return cam
 }
 
-update_camera :: proc(cam: ^Camera_Controller, player: ^Player, dt: f32) 
+update_camera :: proc(cam: ^Camera_Controller, player: ^Player, dt: f32)
 {
     //--------------------------------------------------
     // Tunables
@@ -54,26 +54,18 @@ update_camera :: proc(cam: ^Camera_Controller, player: ^Player, dt: f32)
 
     PLAYER_WIDTH : f32 = 32
 
-    // Layout:
-    //
-    // |   outer   |inner|inner|   outer   |
-    //
-    // The idle deadzone (inner to inner) is exactly PLAYER_WIDTH
-    // wide — INNER is a half-width offset from focus, and doubles
-    // as the look-ahead resting offset once a direction is active.
     INNER := PLAYER_WIDTH * 0.5
     OUTER := PLAYER_WIDTH * 2
 
     STIFFNESS : f32 = 220
     DAMPING   : f32 = 26
 
+    // World size
+    WORLD_WIDTH : f32 = 1600
+
     //--------------------------------------------------
     // Camera-relative trigger lines
     //--------------------------------------------------
-    // Only the OUTER lines matter for triggering — the player is
-    // free to roam the whole outer|inner|centre|inner|outer span
-    // untouched. Inner lines only exist as the resting positions
-    // the spring settles into once a direction is committed to.
 
     left_outer  := cam.focus.x - OUTER
     right_outer := cam.focus.x + OUTER
@@ -88,30 +80,18 @@ update_camera :: proc(cam: ^Camera_Controller, player: ^Player, dt: f32)
 
         if player.position.x > right_outer {
             cam.direction = .Right
-
-            // Look-ahead: push the goal PAST the player, in the
-            // direction of travel. Once the spring settles here,
-            // player.x == focus.x - INNER, i.e. the player rests
-            // on the *opposite* (left) inner line while running
-            // right — more world visible ahead of them.
             cam.target.x = player.position.x + INNER
         }
 
         if player.position.x < left_outer {
             cam.direction = .Left
-
             cam.target.x = player.position.x - INNER
         }
 
     case .Right:
 
-        // Keep the look-ahead goal glued to the player for as
-        // long as they keep committing to this direction.
         cam.target.x = player.position.x + INNER
 
-        // Player has crossed back through centre — release the
-        // camera and let the deadzone re-form around wherever
-        // it currently rests.
         if player.position.x <= cam.focus.x {
             cam.direction = .None
         }
@@ -124,12 +104,26 @@ update_camera :: proc(cam: ^Camera_Controller, player: ^Player, dt: f32)
             cam.direction = .None
         }
     }
-
+    
     //--------------------------------------------------
-    // Vertical
+    // Vertical deadzone
     //--------------------------------------------------
 
-    cam.target.y = player.position.y
+    VERTICAL_DEADZONE : f32 = 96
+
+    top := cam.focus.y - VERTICAL_DEADZONE
+    bottom := cam.focus.y + VERTICAL_DEADZONE
+
+    if player.position.y < top {
+        // Player jumped high enough to leave the deadzone.
+        cam.target.y = player.position.y + VERTICAL_DEADZONE
+    } else if player.position.y > bottom {
+        // Player fell below the deadzone.
+        cam.target.y = player.position.y - VERTICAL_DEADZONE
+    } else {
+        // Stay where we are.
+        cam.target.y = cam.focus.y
+    }
 
     //--------------------------------------------------
     // Spring
@@ -144,6 +138,25 @@ update_camera :: proc(cam: ^Camera_Controller, player: ^Player, dt: f32)
     cam.velocity.y += accel * dt
     cam.velocity.y *= math.exp(-DAMPING * dt)
     cam.focus.y += cam.velocity.y * dt
+
+    //--------------------------------------------------
+    // Clamp to world bounds
+    //--------------------------------------------------
+
+    half_view_width := f32(rl.GetScreenWidth()) * 0.5 / cam.camera.zoom
+
+    min_x := half_view_width
+    max_x := WORLD_WIDTH - half_view_width
+
+    if cam.focus.x < min_x {
+        cam.focus.x = min_x
+        cam.velocity.x = 0
+    }
+
+    if cam.focus.x > max_x {
+        cam.focus.x = max_x
+        cam.velocity.x = 0
+    }
 
     cam.camera.target = cam.focus
 }

@@ -27,10 +27,16 @@ main :: proc() {
     // raylib init
     SCREEN_WIDTH :: 800.0
     SCREEN_HEIGHT :: 600.0
-    TITLE :: "roli"
+    TITLE :: "ROLI"
 
+    // window size and title
     rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE)
     defer rl.CloseWindow()
+
+    // window and taskbar icon
+    icon: rl.Image = rl.LoadImage("Z:/code/ghsh/assets/textures/icon_heart.png")
+    rl.SetWindowIcon(icon)
+    defer rl.UnloadImage(icon)
 
     rl.SetTargetFPS(60)
 
