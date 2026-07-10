@@ -48,10 +48,7 @@ init_camera :: proc(player: ^Player) -> Camera_Controller
 
 update_camera :: proc(cam: ^Camera_Controller, player: ^Player, delta_time: f32)
 {
-    //--------------------------------------------------
     // Tunables
-    //--------------------------------------------------
-
     PLAYER_WIDTH : f32 = 32
 
     INNER := PLAYER_WIDTH * 0.5
@@ -63,17 +60,11 @@ update_camera :: proc(cam: ^Camera_Controller, player: ^Player, delta_time: f32)
     // World size
     WORLD_WIDTH : f32 = 1600
 
-    //--------------------------------------------------
     // Camera-relative trigger lines
-    //--------------------------------------------------
-
     left_outer  := cam.focus.x - OUTER
     right_outer := cam.focus.x + OUTER
 
-    //--------------------------------------------------
     // Trigger + look-ahead tracking
-    //--------------------------------------------------
-
     switch cam.direction {
 
     case .None:
@@ -105,10 +96,7 @@ update_camera :: proc(cam: ^Camera_Controller, player: ^Player, delta_time: f32)
         }
     }
     
-    //--------------------------------------------------
     // Vertical deadzone
-    //--------------------------------------------------
-
     VERTICAL_DEADZONE : f32 = 96
 
     top := cam.focus.y - VERTICAL_DEADZONE
@@ -125,10 +113,7 @@ update_camera :: proc(cam: ^Camera_Controller, player: ^Player, delta_time: f32)
         cam.target.y = cam.focus.y
     }
 
-    //--------------------------------------------------
     // Spring
-    //--------------------------------------------------
-
     accel := (cam.target.x - cam.focus.x) * STIFFNESS
     cam.velocity.x += accel * delta_time
     cam.velocity.x *= math.exp(-DAMPING * delta_time)
@@ -139,10 +124,7 @@ update_camera :: proc(cam: ^Camera_Controller, player: ^Player, delta_time: f32)
     cam.velocity.y *= math.exp(-DAMPING * delta_time)
     cam.focus.y += cam.velocity.y * delta_time
 
-    //--------------------------------------------------
     // Clamp to world bounds
-    //--------------------------------------------------
-
     half_view_width := f32(rl.GetScreenWidth()) * 0.5 / cam.camera.zoom
 
     min_x := half_view_width

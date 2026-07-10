@@ -19,10 +19,7 @@ update_input :: proc(input: ^Input)
 {
     input^ = {}
 
-    //
     // Keyboard movement
-    //
-
     if rl.IsKeyDown(.A) || rl.IsKeyDown(.LEFT) {
         input.move_x -= 1
     }
@@ -31,10 +28,7 @@ update_input :: proc(input: ^Input)
         input.move_x += 1
     }
 
-    //
     // Controller movement
-    //
-
     if rl.IsGamepadAvailable(0) {
 
         stick_x := rl.GetGamepadAxisMovement(
@@ -48,10 +42,7 @@ update_input :: proc(input: ^Input)
         }
     }
 
-    //
     // Jump
-    //
-
     input.jump_pressed =
         rl.IsKeyPressed(.SPACE) ||
         rl.IsKeyPressed(.W) ||
@@ -62,9 +53,7 @@ update_input :: proc(input: ^Input)
 
     input.jump_down = rl.IsKeyDown(.SPACE)
 
-    //
     // Attack
-    //
     input.attack_pressed =
         rl.IsMouseButtonPressed(.LEFT) ||
         rl.IsGamepadButtonPressed(

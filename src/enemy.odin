@@ -65,32 +65,40 @@ update_enemy :: proc(enemy: ^Enemy, delta_time: f32, tile_map: ^Tile_Map)
 // enemy movement ai
 update_enemy_movement :: proc(enemy: ^Enemy, delta_time: f32) 
 {
+    // speed in which enemy moves
     speed: f32 = 100
 
+    // move left - change facing dfirection left
     if enemy.moving_left {
         enemy.velocity.x = -speed
         enemy.facing_right = false
 
+        // when its moved left the patrol distance amount
         if enemy.position.x <= enemy.start_position.x - enemy.patrol_distance {
             enemy.moving_left = false
         }
     } else {
+        // move right
         enemy.velocity.x = speed
         enemy.facing_right = true
 
+        // moved right the patrol distance amount
         if enemy.position.x >= enemy.start_position.x {
             enemy.moving_left = true
         }
     }
 
+    // add movement to velocity of x
     enemy.position.x += enemy.velocity.x * delta_time
 }
 
 draw_enemy :: proc(enemy: ^Enemy) 
 {
+    // texture sprite size
     frame_width: f32 = 32
     frame_height: f32 = 32
 
+    // rectangle surrounding the player
     source := rl.Rectangle{
         x = f32(enemy.animation.frame) * frame_width,
         y = f32(enemy.animation.row) * frame_height,

@@ -67,39 +67,50 @@ spawn_enemy :: proc(world: ^World, texture: rl.Texture2D, position: rl.Vector2) 
 
 // from the tilemap data draw the map using the righ ttiles etc
 draw_map :: proc(tile_map: ^Tile_Map) {
-	// do nothing if no tiles
+	// no tilesets loaded
 	if len(tile_map.tilesets) == 0 {
 		return
 	}
 
-	// get the tilesets
-	tileset := tile_map.tilesets[0]
-
-	// get all layers ensure they exist
+	// draw every layer
 	for &layer in tile_map.layers {
-
 		if layer.layer_type != "tilelayer" {
 			continue
 		}
 
-		// for all tiles get the texture needed and make them usable rects with the texture
-		for y in 0 ..< layer.height {
+		// skip invisible layers
+		if !layer.visible {
+			continue
+		}
 
-			for x in 0 ..< layer.width {
-
+		for y in 0..<layer.height {
+			for x in 0..<layer.width {
 				index := y * layer.width + x
 
 				gid := layer.data[index]
 
+				// empty tile
 				if gid == 0 {
 					continue
 				}
 
-				tile := gid - tileset.firstgid
+				// find which tileset owns this gid
+				tileset := get_tileset(tile_map, gid)
+
+				if tileset == nil {
+					continue
+				}
+
+				// convert global tile id to tileset local id
+				local_id :=
+					get_local_tile_id(
+						tileset,
+						gid,
+					)
 
 				source := rl.Rectangle {
-					f32((tile % tileset.columns) * tileset.tilewidth),
-					f32((tile / tileset.columns) * tileset.tileheight),
+					f32((local_id % tileset.columns) * tileset.tilewidth),
+					f32((local_id / tileset.columns) * tileset.tileheight),
 					f32(tileset.tilewidth),
 					f32(tileset.tileheight),
 				}
@@ -109,7 +120,12 @@ draw_map :: proc(tile_map: ^Tile_Map) {
 					f32(y * tile_map.tileheight),
 				}
 
-				rl.DrawTextureRec(tileset.texture, source, destination, rl.WHITE)
+				rl.DrawTextureRec(
+					tileset.texture,
+					source,
+					destination,
+					rl.WHITE,
+				)
 			}
 		}
 	}

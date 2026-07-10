@@ -13,6 +13,8 @@
 - [?] player can shoot
 
 # enemy
+- [] different types of enemies
+- [] drop lifes and items on death
 
 
 # object
@@ -22,16 +24,19 @@
 - [] make each individual screen with update and click logic - add buttons that can be pressed and do something
 
 # game
-
+- [] add music per screen (possiibly goes in world)
 
 # world
 - [] dead enemy drops health or object (health, skill, etc)
 - [] hold array of objects
 - [] handle multiple level
+- [] add music per screen (possiibly goes in game)
+- [] sound effects - jump - double jump - death etc
 
 # tilemap
 - [] tilemap can handle multiple layers
 - [] tilemap can handle multiple objects states ("collidable" atm)
+- [] tilemap tells about multiple objects - spawn positions etc
 
 =================================================================================
 ===                      DONE                                                 ===
@@ -39,10 +44,11 @@
 
 # main
 - [x] tracking allocator to track memory allcoations - tell about leaks
-- [x] 
+- [x] init raylib things - window - game loop
 
 # assets
 - [x] asset loading
+- [x] asset unloading
 
 # player
 - [x] player object + init

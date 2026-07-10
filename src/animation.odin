@@ -26,10 +26,7 @@ Animation_State :: enum {
 
 update_animation :: proc(object: ^$T, delta_time: f32) 
 {
-    //
     // Choose animation
-    //
-
     // if object not on ground (hes jumping) so play jumping animations per direction
     if !object.grounded {
 
@@ -57,11 +54,7 @@ update_animation :: proc(object: ^$T, delta_time: f32)
         }
     }
 
-
-    //
     // Advance frames
-    //
-
     object.animation.timer += delta_time
 
     if object.animation.timer >= object.animation.frame_time {
