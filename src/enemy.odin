@@ -18,6 +18,7 @@ Enemy :: struct {
     jumps_remaining: i32, 
     damage: i32,
     is_alive: bool,
+    health: int,
 }
 
 init_enemy :: proc(texture: rl.Texture2D, position: rl.Vector2) -> Enemy 
@@ -47,6 +48,7 @@ init_enemy :: proc(texture: rl.Texture2D, position: rl.Vector2) -> Enemy
         is_alive = true,
         position = position,
         texture = texture,
+        health = 1,
     }
 
     return enemy

@@ -6,9 +6,15 @@ import rl "vendor:raylib"
 
 World :: struct {
 	tile_map: Tile_Map,
+	// entities
 	player:   Player,
 	enemies:  [dynamic]Enemy,
+	// objects
+	coins: [dynamic]Coin,
+	health_drops: [dynamic]Health_Drop,
+	//
 	camera:   Camera_Controller,
+	// levels
 	level: int,
 	changing_level: bool,
 }
@@ -19,6 +25,8 @@ init_world :: proc(assets: ^Assets) -> World {
     world := World {
         enemies = make([dynamic]Enemy, 0, 64),
         level = 1,
+		coins = make([dynamic]Coin, 0, 128),
+		health_drops = make([dynamic]Health_Drop, 0, 64),
     }
 
     tile_map, ok := load_map("assets/maps/Level1.tmj")
@@ -29,17 +37,13 @@ init_world :: proc(assets: ^Assets) -> World {
 
     world.tile_map = tile_map
 
-
     world.player = init_player(assets.player_texture)
 
     world.player.position = world.tile_map.player_spawn
 
-
     load_world_objects(&world, assets)
 
-
     world.camera = init_camera(&world.player)
-
 
     return world
 }
@@ -51,13 +55,16 @@ deinit_world :: proc(world: ^World) {
 
 	// delete the array of enemies
 	delete(world.enemies)
+	delete(world.coins)
+	delete(world.health_drops)
 
 	// deinit the world to nothing
 	world^ = {}
 }
 
 // helper to create enemies and add them to an array of enemies
-spawn_enemy :: proc(world: ^World, texture: rl.Texture2D, position: rl.Vector2) {
+spawn_enemy :: proc(world: ^World, texture: rl.Texture2D, position: rl.Vector2) 
+{
 	// init an enemy with texture and position
 	enemy := init_enemy(texture, position)
 	enemy.start_position = enemy.position
@@ -66,6 +73,25 @@ spawn_enemy :: proc(world: ^World, texture: rl.Texture2D, position: rl.Vector2) 
 	append(&world.enemies, enemy)
 }
 
+// when enemy dies random chance for spawn coin into world
+spawn_coin :: proc(world: ^World, position: rl.Vector2) 
+{
+	fmt.printfln("Spawned coin")
+    append(&world.coins, Coin{
+        position = position,
+    })
+}
+
+// when enemy dies random chance for spawn life into world
+spawn_life :: proc(world: ^World, position: rl.Vector2) 
+{
+	fmt.printfln("Spawned health")
+    append(&world.health_drops, Health_Drop{
+        position = position,
+    })
+}
+
+// from the tilemap spawn all objects into the world
 load_world_objects :: proc(world: ^World, assets: ^Assets)
 {
     for layer in world.tile_map.layers {
@@ -74,7 +100,6 @@ load_world_objects :: proc(world: ^World, assets: ^Assets)
             continue
         }
 
-
         for object in layer.objects {
 
             position := rl.Vector2{
@@ -82,9 +107,8 @@ load_world_objects :: proc(world: ^World, assets: ^Assets)
                 object.y,
             }
 
-
             switch object.name {
-
+			// TODO: add more objects to the tilemap - in tiled
             case "Enemy":
                 spawn_enemy(
                     world,
@@ -98,7 +122,8 @@ load_world_objects :: proc(world: ^World, assets: ^Assets)
 }
 
 // from the tilemap data draw the map using the righ ttiles etc
-draw_map :: proc(tile_map: ^Tile_Map) {
+draw_map :: proc(tile_map: ^Tile_Map) 
+{
 	// no tilesets loaded
 	if len(tile_map.tilesets) == 0 {
 		return
@@ -163,6 +188,7 @@ draw_map :: proc(tile_map: ^Tile_Map) {
 	}
 }
 
+// check for exits in  the tilemap and whether the player has collided with it
 check_exit :: proc(world: ^World) -> bool
 {
     for exit in world.tile_map.exits {
@@ -181,21 +207,24 @@ check_exit :: proc(world: ^World) -> bool
     return false
 }
 
+// clear assets and memory from old level and restart new with new level data
 load_next_level :: proc(world: ^World, assets: ^Assets)
 {
     unload_map(&world.tile_map)
 
     clear(&world.enemies)
+	clear(&world.coins)
+	clear(&world.health_drops)
 
     world.level += 1
-
 
     map_path: string
 
     switch world.level {
 
-    // case 2:
-    //     map_path = "assets/maps/Level2.tmj"
+		// testing by loading level1 again
+    case 2:
+        map_path = "assets/maps/Level1.tmj"
 
     // case 3:
     //     map_path = "assets/maps/Level3.tmj"
@@ -205,25 +234,22 @@ load_next_level :: proc(world: ^World, assets: ^Assets)
         return
     }
 
-
     tile_map, ok := load_map(map_path)
 
     if !ok {
         panic("Couldn't load next level")
     }
 
-
     world.tile_map = tile_map
 
-
     world.player.position = world.tile_map.player_spawn
-
 
     load_world_objects(world, assets)
 }
 
 // update things that happen in the world like (player, enemies)
-update_world :: proc(world: ^World, input: ^Input, delta_time: f32, assets: ^Assets) {
+update_world :: proc(world: ^World, input: ^Input, delta_time: f32, assets: ^Assets) 
+{
 	// update the players pos in world - howand when input has been done and tilemappos
 	update_player(&world.player, input, delta_time, &world.tile_map)
 
@@ -234,9 +260,56 @@ update_world :: proc(world: ^World, input: ^Input, delta_time: f32, assets: ^Ass
 	}
 
 	// if player and an enemy collide - handle that
-	if check_player_enemy_collisions(&world.player, &world.enemies) {
+	if check_player_enemy_collisions(world, &world.player, &world.enemies) {
 		// Handle collision
 		fmt.println("player and enemy colided")
+	}
+
+	// Collect coins
+    for i := 0; i < len(world.coins); i += 1 {
+
+        coin := &world.coins[i]
+
+        if coin.collected {
+            continue
+        }
+
+		// if player collides with coin collect it
+        if rl.CheckCollisionCircles(
+            world.player.position,
+            16,
+            coin.position,
+            8,
+        ) {
+            coin.collected = true
+            world.player.coins += 1
+        }
+    }
+
+	// collect health drops
+	for i := 0; i < len(world.health_drops); i += 1 {
+
+		drop := &world.health_drops[i]
+
+		if drop.collected {
+			continue
+		}
+
+		// player collided with health drop collect it
+		if rl.CheckCollisionCircles(
+			world.player.position,
+			16,
+			drop.position,
+			8,
+		) {
+			// only heal if not already full
+			if world.player.lives < world.player.max_lives {
+
+				world.player.lives += 1
+
+				drop.collected = true
+			}
+		}
 	}
 
 	// update camera in world pos, player to track and delta time
@@ -286,8 +359,41 @@ draw_world :: proc(world: ^World, assets: ^Assets) {
 		}
 	}
 
+	// draw coins into the world
+	for coin in world.coins {
+
+		if coin.collected {
+			continue
+		}
+
+		rl.DrawTexture(
+			assets.coin_texture,
+			i32(coin.position.x),
+			i32(coin.position.y),
+			rl.WHITE,
+		)
+	}
+
+	for drop in world.health_drops {
+		if drop.collected {
+			continue
+		}
+
+		rl.DrawTexture(
+			assets.heart_texture,
+			i32(drop.position.x),
+			i32(drop.position.y),
+			rl.WHITE,
+		)
+	}
+
 	rl.EndMode2D()
+
+	// hud space
 
 	// hud space - outside cam
 	draw_player_hearts(&world.player, assets.heart_texture)
+
+	// put coins on screen too - when enemy dies - enemy picks em up
+	draw_player_coins(&world.player, assets.coin_texture)
 }

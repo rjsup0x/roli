@@ -24,6 +24,9 @@ Player :: struct {
     animation_state: Animation_State,
     animation: Animation,
     texture: rl.Texture2D,
+    coins: int,
+    coin_text: [32]u8,
+    coin_string: cstring,
 }
 
 // init a player - into a world etc
@@ -65,6 +68,7 @@ init_player :: proc(texture: rl.Texture2D) -> Player
         },
 
         texture = texture,
+        coins = 0,
     }
 
     return player

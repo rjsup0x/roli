@@ -2,6 +2,9 @@ package main
 
 import rl"vendor:raylib"
 
+import "core:strings"
+import "core:fmt"
+
 draw_player_hearts :: proc(player: ^Player, heart: rl.Texture2D) {
 
     heart_size: f32 = 16
@@ -46,6 +49,55 @@ draw_player_hearts :: proc(player: ^Player, heart: rl.Texture2D) {
             i32(16 + i * 20),
             18,
             tint,
+        )
+    }
+}
+
+draw_player_coins :: proc(player: ^Player, coin: rl.Texture2D) {
+
+    spacing: f32 = 20
+
+    box_width := f32(player.coins) * spacing + 12
+    if box_width < 40 {
+        box_width = 40
+    }
+
+    box_height: f32 = 36
+
+    margin: f32 = 10
+
+    box_x := f32(rl.GetScreenWidth()) - box_width - margin
+    box_y := 56.0
+
+    // Background
+    rl.DrawRectangle(
+        i32(box_x),
+        i32(box_y),
+        i32(box_width),
+        i32(box_height),
+        rl.BLACK,
+    )
+
+    // Border
+    rl.DrawRectangleLinesEx(
+        rl.Rectangle{
+            box_x,
+            f32(box_y),
+            box_width,
+            box_height,
+        },
+        2,
+        rl.WHITE,
+    )
+
+    // Draw one coin per collected coin
+    for i := 0; i < player.coins; i += 1 {
+
+        rl.DrawTexture(
+            coin,
+            i32(box_x + 6 + f32(i) * spacing),
+            i32(box_y + 8),
+            rl.WHITE,
         )
     }
 }
