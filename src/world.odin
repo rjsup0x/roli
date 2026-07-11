@@ -9,38 +9,39 @@ World :: struct {
 	player:   Player,
 	enemies:  [dynamic]Enemy,
 	camera:   Camera_Controller,
+	level: int,
+	changing_level: bool,
 }
 
 // init the world data
 init_world :: proc(assets: ^Assets) -> World {
-	// init the world - with enemies array
-	world := World {
-		enemies = make([dynamic]Enemy, 0, 64),
-	}
 
-	// load the level tilemap
-	tile_map, ok := load_map("assets/map/Map.tmj")
-	if !ok {
-		panic("Couldn't load map")
-	}
+    world := World {
+        enemies = make([dynamic]Enemy, 0, 64),
+        level = 1,
+    }
 
-	// give the tilemap to the world
-	world.tile_map = tile_map
+    tile_map, ok := load_map("assets/maps/Level1.tmj")
 
-	// init a player inside the world - texture
-	world.player = init_player(assets.player_texture)
-	// init the position of the player within the world
-	world.player.position = world.tile_map.player_spawn
+    if !ok {
+        panic("Couldn't load map")
+    }
 
-	// spawn some enemies intot he world - add enemies to the enemy array
-	spawn_enemy(&world, assets.enemy_texture, {800, 450})
+    world.tile_map = tile_map
 
-	spawn_enemy(&world, assets.enemy_texture, {1550, 415})
 
-	// init a camera to the world
-	world.camera = init_camera(&world.player)
+    world.player = init_player(assets.player_texture)
 
-	return world
+    world.player.position = world.tile_map.player_spawn
+
+
+    load_world_objects(&world, assets)
+
+
+    world.camera = init_camera(&world.player)
+
+
+    return world
 }
 
 // remove any data or allocations to data in the world
@@ -63,6 +64,37 @@ spawn_enemy :: proc(world: ^World, texture: rl.Texture2D, position: rl.Vector2) 
 
 	// apopend to the enemies array
 	append(&world.enemies, enemy)
+}
+
+load_world_objects :: proc(world: ^World, assets: ^Assets)
+{
+    for layer in world.tile_map.layers {
+
+        if layer.layer_type != "objectgroup" {
+            continue
+        }
+
+
+        for object in layer.objects {
+
+            position := rl.Vector2{
+                object.x,
+                object.y,
+            }
+
+
+            switch object.name {
+
+            case "Enemy":
+                spawn_enemy(
+                    world,
+                    assets.enemy_texture,
+                    position,
+                )
+
+            }
+        }
+    }
 }
 
 // from the tilemap data draw the map using the righ ttiles etc
@@ -131,8 +163,67 @@ draw_map :: proc(tile_map: ^Tile_Map) {
 	}
 }
 
+check_exit :: proc(world: ^World) -> bool
+{
+    for exit in world.tile_map.exits {
+
+        if rl.CheckCollisionCircles(
+            world.player.position,
+            16,
+            exit,
+            16,
+        ){
+            return true
+        }
+
+    }
+
+    return false
+}
+
+load_next_level :: proc(world: ^World, assets: ^Assets)
+{
+    unload_map(&world.tile_map)
+
+    clear(&world.enemies)
+
+    world.level += 1
+
+
+    map_path: string
+
+    switch world.level {
+
+    // case 2:
+    //     map_path = "assets/maps/Level2.tmj"
+
+    // case 3:
+    //     map_path = "assets/maps/Level3.tmj"
+
+    case:
+        fmt.println("Game completed!")
+        return
+    }
+
+
+    tile_map, ok := load_map(map_path)
+
+    if !ok {
+        panic("Couldn't load next level")
+    }
+
+
+    world.tile_map = tile_map
+
+
+    world.player.position = world.tile_map.player_spawn
+
+
+    load_world_objects(world, assets)
+}
+
 // update things that happen in the world like (player, enemies)
-update_world :: proc(world: ^World, input: ^Input, delta_time: f32) {
+update_world :: proc(world: ^World, input: ^Input, delta_time: f32, assets: ^Assets) {
 	// update the players pos in world - howand when input has been done and tilemappos
 	update_player(&world.player, input, delta_time, &world.tile_map)
 
@@ -150,6 +241,18 @@ update_world :: proc(world: ^World, input: ^Input, delta_time: f32) {
 
 	// update camera in world pos, player to track and delta time
 	update_camera(&world.camera, &world.player, delta_time)
+
+	// check if it needs to change the level or nah
+	if check_exit(world) && !world.changing_level {
+		world.changing_level = true
+
+		load_next_level(world, assets)
+
+		world.changing_level = false
+
+    	// load_next_level(world)
+		fmt.println("Going to next level")
+	}
 }
 
 // draw all assets and things happening in the world

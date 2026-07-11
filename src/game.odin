@@ -68,7 +68,7 @@ update_playing_screen :: proc(game: ^Game, delta_time: f32)
         // while playing it should also keep updating
         update_input(&game.input)
          // update all game instance logic - players, enemies, other entities etc
-        update_world(&game.world, &game.input, delta_time)
+        update_world(&game.world, &game.input, delta_time, &game.assets)
 
         // if the player has no more lives its gameover
         if !game.world.player.is_alive {

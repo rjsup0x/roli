@@ -37,7 +37,7 @@ main :: proc() {
 	defer rl.CloseWindow()
 
     // window and taskbar icon
-    icon: rl.Image = rl.LoadImage("assets/textures/icon_heart.png")
+    icon: rl.Image = rl.LoadImage("assets/textures/level1/icon_heart.png")
     rl.SetWindowIcon(icon)
     defer rl.UnloadImage(icon)
 

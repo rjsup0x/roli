@@ -21,6 +21,8 @@ Tile_Layer :: struct {
     layer_type: string `json:"type"`,
     visible: bool,
     properties: []Tile_Property,
+
+    objects: []Map_Object,
 }
 
 Tileset :: struct {
@@ -46,6 +48,16 @@ Tile_Map :: struct {
     tilesets: []Tileset,
     collisions: [dynamic]rl.Rectangle,
     player_spawn: rl.Vector2,
+    exits: [dynamic]rl.Vector2,
+}
+
+Map_Object :: struct {
+    id: int,
+    name: string,
+    x: f32,
+    y: f32,
+    object_type: string `json:"type"`,
+    point: bool,
 }
 
 MAP_ARENA_SIZE :: 8 * 1024 * 1024
@@ -104,7 +116,7 @@ load_map :: proc(map_path: string) -> (Tile_Map, bool)
     build_map_collision(&tile_map)
 
     // player spawn location
-    tile_map.player_spawn = rl.Vector2{200,300}
+    load_map_objects(&tile_map)
 
     return tile_map,true
 }
@@ -192,6 +204,38 @@ build_map_collision :: proc(tile_map:^Tile_Map)
 
                 // add the collision property to the tilemap
                 append(&tile_map.collisions, rect)
+            }
+        }
+    }
+}
+
+load_map_objects :: proc(tile_map: ^Tile_Map)
+{
+    tile_map.exits = make([dynamic]rl.Vector2)
+
+    for layer in tile_map.layers {
+
+        if layer.layer_type != "objectgroup" {
+            continue
+        }
+
+
+        for object in layer.objects {
+
+            position := rl.Vector2{
+                object.x,
+                object.y,
+            }
+
+
+            switch object.name {
+
+            case "PlayerSpawn":
+                tile_map.player_spawn = position
+
+
+            case "Exit":
+                append(&tile_map.exits, position)
             }
         }
     }
