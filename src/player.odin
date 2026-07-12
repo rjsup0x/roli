@@ -4,6 +4,7 @@ import rl "vendor:raylib"
 
 // things the player can be or use
 Player :: struct {
+    entity: Entity,
     active: bool,
     position: rl.Vector2,
     previous_position: rl.Vector2,

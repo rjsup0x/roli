@@ -5,8 +5,8 @@ import rl"vendor:raylib"
 import "core:strings"
 import "core:fmt"
 
-draw_player_hearts :: proc(player: ^Player, heart: rl.Texture2D) {
-
+draw_player_hearts :: proc(player: ^Player, heart: rl.Texture2D) 
+{
     heart_size: f32 = 16
     spacing: f32 = 20
 
@@ -53,7 +53,9 @@ draw_player_hearts :: proc(player: ^Player, heart: rl.Texture2D) {
     }
 }
 
-draw_player_coins :: proc(player: ^Player, coin: rl.Texture2D) {
+draw_player_coins :: proc(player: ^Player, coin: rl.Texture2D)
+{
+    COIN_FRAMES :: 9
 
     spacing: f32 = 20
 
@@ -90,13 +92,25 @@ draw_player_coins :: proc(player: ^Player, coin: rl.Texture2D) {
         rl.WHITE,
     )
 
-    // Draw one coin per collected coin
+    frame_width := coin.width / COIN_FRAMES
+
+    source := rl.Rectangle{
+        x = 0,
+        y = 0,
+        width = f32(frame_width),
+        height = f32(coin.height),
+    }
+
+    // Draw one coin icon per collected coin
     for i := 0; i < player.coins; i += 1 {
 
-        rl.DrawTexture(
+        rl.DrawTextureRec(
             coin,
-            i32(box_x + 6 + f32(i) * spacing),
-            i32(box_y + 8),
+            source,
+            rl.Vector2{
+                box_x + 6 + f32(i) * spacing,
+                f32(box_y + 8),
+            },
             rl.WHITE,
         )
     }

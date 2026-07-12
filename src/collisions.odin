@@ -3,7 +3,8 @@ package main
 import rl"vendor:raylib"
 import "core:math/rand"
 
-check_player_enemy_collisions :: proc(world: ^World, player: ^Player, enemies: ^[dynamic]Enemy) -> bool {
+check_player_enemy_collisions :: proc(world: ^World, player: ^Player, enemies: ^[dynamic]Enemy) -> bool 
+{
 
     // for all enemies in the array
     for &enemy in enemies^ {
@@ -64,7 +65,8 @@ check_horizontal_collision :: proc(object: ^$T, tile_map: ^Tile_Map)
     }
 }
 
-damage_player :: proc(player: ^Player) {
+damage_player :: proc(player: ^Player) 
+{
     DAMAGE_COOLDOWN :: 1.0
     
     // player not alive do nothing
@@ -91,7 +93,8 @@ damage_player :: proc(player: ^Player) {
     }
 }
 
-damage_enemy :: proc(enemy: ^Enemy, world: ^World) {
+damage_enemy :: proc(enemy: ^Enemy, world: ^World) 
+{
     // kill enemy 
     if !enemy.is_alive {
         return
@@ -114,7 +117,8 @@ damage_enemy :: proc(enemy: ^Enemy, world: ^World) {
     }
 }
 
-rand_chance :: proc(percent: i32) -> bool {
+rand_chance :: proc(percent: i32) -> bool 
+{
     // Generate range [0, 100) -> values 0 to 99 (100 distinct outcomes)
     random_num := rand.int32_range(0, 100)
     

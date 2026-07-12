@@ -1,6 +1,7 @@
 package main
 
 import "core:fmt"
+import "core:math/rand"
 
 import rl "vendor:raylib"
 
@@ -10,7 +11,7 @@ World :: struct {
 	player:   Player,
 	enemies:  [dynamic]Enemy,
 	// objects
-	coins: [dynamic]Coin,
+	coins: [dynamic]Coin_Drop,
 	health_drops: [dynamic]Health_Drop,
 	//
 	camera:   Camera_Controller,
@@ -20,12 +21,12 @@ World :: struct {
 }
 
 // init the world data
-init_world :: proc(assets: ^Assets) -> World {
-
+init_world :: proc(assets: ^Assets) -> World 
+{
     world := World {
         enemies = make([dynamic]Enemy, 0, 64),
         level = 1,
-		coins = make([dynamic]Coin, 0, 128),
+		coins = make([dynamic]Coin_Drop, 0, 128),
 		health_drops = make([dynamic]Health_Drop, 0, 64),
     }
 
@@ -49,7 +50,8 @@ init_world :: proc(assets: ^Assets) -> World {
 }
 
 // remove any data or allocations to data in the world
-deinit_world :: proc(world: ^World) {
+deinit_world :: proc(world: ^World) 
+{
 	// unload the tilemap
 	unload_map(&world.tile_map)
 
@@ -76,19 +78,26 @@ spawn_enemy :: proc(world: ^World, texture: rl.Texture2D, position: rl.Vector2)
 // when enemy dies random chance for spawn coin into world
 spawn_coin :: proc(world: ^World, position: rl.Vector2) 
 {
+	coin := init_coin(position)
+	coin.position = position
+
+	coin.velocity = {
+    	0,
+   	 	-250,
+	}
+
 	fmt.printfln("Spawned coin")
-    append(&world.coins, Coin{
-        position = position,
-    })
+    append(&world.coins, coin)
 }
 
 // when enemy dies random chance for spawn life into world
 spawn_life :: proc(world: ^World, position: rl.Vector2) 
 {
+	life := init_health_drop(position)
+	life.position = position
+
 	fmt.printfln("Spawned health")
-    append(&world.health_drops, Health_Drop{
-        position = position,
-    })
+    append(&world.health_drops, life)
 }
 
 // from the tilemap spawn all objects into the world
@@ -270,6 +279,8 @@ update_world :: proc(world: ^World, input: ^Input, delta_time: f32, assets: ^Ass
 
         coin := &world.coins[i]
 
+		update_coin(coin, delta_time, &world.tile_map)
+
         if coin.collected {
             continue
         }
@@ -329,7 +340,8 @@ update_world :: proc(world: ^World, input: ^Input, delta_time: f32, assets: ^Ass
 }
 
 // draw all assets and things happening in the world
-draw_world :: proc(world: ^World, assets: ^Assets) {
+draw_world :: proc(world: ^World, assets: ^Assets) 
+{
 	rl.BeginMode2D(world.camera.camera)
 
 	// debug checks
@@ -360,31 +372,22 @@ draw_world :: proc(world: ^World, assets: ^Assets) {
 	}
 
 	// draw coins into the world
-	for coin in world.coins {
+	for &coin in world.coins {
 
 		if coin.collected {
 			continue
 		}
 
-		rl.DrawTexture(
-			assets.coin_texture,
-			i32(coin.position.x),
-			i32(coin.position.y),
-			rl.WHITE,
-		)
+		draw_coin(&coin, assets.coin_texture)
 	}
 
-	for drop in world.health_drops {
+	// draw health drops into the worl
+	for &drop in world.health_drops {
 		if drop.collected {
 			continue
 		}
 
-		rl.DrawTexture(
-			assets.heart_texture,
-			i32(drop.position.x),
-			i32(drop.position.y),
-			rl.WHITE,
-		)
+		draw_health_drop(&drop, assets.heart_texture)
 	}
 
 	rl.EndMode2D()

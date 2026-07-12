@@ -111,3 +111,12 @@
 - [x] players health is displayed by heart texture
 - [x] player hearts = player lives
 - [x] player loses heart when losing life
+
+=================================================================================
+===                        Random    ideas                                    ===
+=================================================================================
+
+- [] for a game where you enter different rooms
+    - Room struct w/ tiles, objects etc
+    - then World has an array of different rooms
+    - keep track of rooms with CurrentRoomIndex

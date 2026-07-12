@@ -3,7 +3,8 @@ package main
 import "core:testing"
 
 @(test)
-test_player_takes_damage :: proc(t: ^testing.T) {
+test_player_takes_damage :: proc(t: ^testing.T) 
+{
     player := Player{
         lives = 3,
         is_alive = true,
@@ -18,7 +19,8 @@ test_player_takes_damage :: proc(t: ^testing.T) {
 }
 
 @(test)
-test_player_cannot_take_damage_during_cooldown :: proc(t: ^testing.T) {
+test_player_cannot_take_damage_during_cooldown :: proc(t: ^testing.T) 
+{
     player := Player{
         lives = 3,
         is_alive = true,
