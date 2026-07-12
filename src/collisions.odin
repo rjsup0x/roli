@@ -34,8 +34,8 @@ check_player_enemy_collisions :: proc(world: ^World, player: ^Player, enemies: ^
                     spawn_coin(world, enemy.position)
                 }
 
-                // random life drop 30 % chance
-                if rand_chance(30) {
+                // random life drop 10 % chance
+                if rand_chance(10) {
                     spawn_life(world, enemy.position)
                 }
             }
