@@ -25,7 +25,20 @@ check_player_enemy_collisions :: proc(world: ^World, player: ^Player, enemies: ^
         // if player lands on enemy head
         if stomp {
             player.velocity.y = -500
-            damage_enemy(&enemy, world)
+
+            // damage_enemy no longer needs to know about the world - it just
+            // reports whether the enemy died, and we decide what to spawn here
+            if damage_enemy(&enemy) == .Died {
+                // random coin drop 50% chance
+                if rand_chance(50) {
+                    spawn_coin(world, enemy.position)
+                }
+
+                // random life drop 30 % chance
+                if rand_chance(30) {
+                    spawn_life(world, enemy.position)
+                }
+            }
         } else {
             // if player collides with enemy normally - player takes damage
             damage_player(player)
@@ -41,8 +54,8 @@ check_horizontal_collision :: proc(object: ^$T, tile_map: ^Tile_Map)
     object_rect := rl.Rectangle{
         object.position.x,
         object.position.y,
-        32,
-        32,
+        object.bounds.width,
+        object.bounds.height,
     }
 
     for collision in tile_map.collisions {
@@ -50,7 +63,7 @@ check_horizontal_collision :: proc(object: ^$T, tile_map: ^Tile_Map)
             // moving right into wall
             if object.velocity.x > 0 {
 
-                object.position.x = collision.x - 32
+                object.position.x = collision.x - object.bounds.width
             }
 
             // moving left into wall
@@ -93,28 +106,28 @@ damage_player :: proc(player: ^Player)
     }
 }
 
-damage_enemy :: proc(enemy: ^Enemy, world: ^World) 
+// result of damaging an enemy - lets the caller (who has the World) decide
+// what to spawn on death, instead of damage_enemy needing a ^World itself
+Enemy_Damage_Result :: enum {
+    Alive,
+    Died,
+}
+
+damage_enemy :: proc(enemy: ^Enemy) -> Enemy_Damage_Result
 {
-    // kill enemy 
+    // already dead, nothing to do
     if !enemy.is_alive {
-        return
+        return .Alive
     }
 
     enemy.health -= 1
 
     if enemy.health <= 0 {
         enemy.is_alive = false
-
-        // random coin drop 50% chance
-        if rand_chance(50) {
-            spawn_coin(world, enemy.position)
-        }
-
-        // random life drop 30 % chance
-        if rand_chance(30) {
-            spawn_life(world, enemy.position)
-        }
+        return .Died
     }
+
+    return .Alive
 }
 
 rand_chance :: proc(percent: i32) -> bool 
@@ -126,4 +139,4 @@ rand_chance :: proc(percent: i32) -> bool
     // 1% chance: needs 1 outcome (0). 0 < 1 is true.
     // 100% chance: needs 100 outcomes. 0..99 < 100 is true.
     return random_num < percent
-}   
+}

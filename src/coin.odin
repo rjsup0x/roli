@@ -4,31 +4,34 @@ import rl"vendor:raylib"
 
 // coin has a posiion and whether its collectd
 Coin_Drop :: struct {
-    position: rl.Vector2,
+    using entity: Entity,
     collected: bool,
-    animation: Animation,
-    animation_state: Animation_State,
-    grounded: bool,
-    velocity: rl.Vector2,
-    facing_right: bool,
-    jumps_remaining: int,
 }
 
 init_coin :: proc(position: rl.Vector2) -> Coin_Drop 
 {
     return Coin_Drop{
-        animation_state = .Idle_Right,
-        animation = Animation{
-            row = 0,
-            frame = 0,
-            frame_count = 9,
-            frame_time = 0.12,
+        entity = Entity{
+            position = position,
+            velocity = { 0, 0 },
+
+            bounds = rl.Rectangle{
+                width = 32,
+                height = 32,
+            },
+
+            jumps_remaining = 0,
+            grounded = false,
+            facing_right = true,
+
+            animation_state = .Idle_Right,
+            animation = Animation{
+                row = 0,
+                frame = 0,
+                frame_count = 9,
+                frame_time = 0.12,
+            },
         },
-        jumps_remaining = 0,
-        position = position,
-        grounded = false,
-        velocity = { 0, 0 },
-        facing_right = true,
     }
 }
 

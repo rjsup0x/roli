@@ -4,12 +4,9 @@ import rl "vendor:raylib"
 
 // things the player can be or use
 Player :: struct {
-    entity: Entity,
+    using entity: Entity,
     active: bool,
-    position: rl.Vector2,
     previous_position: rl.Vector2,
-    velocity: rl.Vector2,
-    bounds: rl.Rectangle,
     scale: f32,
     radius: f32,
     rotation: f32,
@@ -19,15 +16,8 @@ Player :: struct {
     is_alive: bool,
     damage: i32,
     damage_cooldown: f32,
-    jumps_remaining: i32,
-    grounded: bool,
-    facing_right: bool,
-    animation_state: Animation_State,
-    animation: Animation,
     texture: rl.Texture2D,
     coins: int,
-    coin_text: [32]u8,
-    coin_string: cstring,
 }
 
 // init a player - into a world etc
@@ -36,13 +26,28 @@ init_player :: proc(texture: rl.Texture2D) -> Player
 {
     player := Player{
         active = true,
-        position = {200, 300},
         previous_position = {200, 300},
-        velocity = {0, 0},
 
-        bounds = rl.Rectangle{
-            width = 32,
-            height = 32,
+        entity = Entity{
+            position = {200, 300},
+            velocity = {0, 0},
+
+            bounds = rl.Rectangle{
+                width = 32,
+                height = 32,
+            },
+
+            jumps_remaining = 2,
+            grounded = true,
+            facing_right = true,
+
+            animation_state = .Idle_Right,
+            animation = Animation{
+                row = 0,
+                frame = 0,
+                frame_count = 4,
+                frame_time = 0.15,
+            },
         },
 
         scale = 1.0,
@@ -55,18 +60,6 @@ init_player :: proc(texture: rl.Texture2D) -> Player
         is_alive = true,
 
         damage = 10,
-
-        jumps_remaining = 2,
-        grounded = true,
-        facing_right = true,
-
-        animation_state = .Idle_Right,
-        animation = Animation{
-            row = 0,
-            frame = 0,
-            frame_count = 4,
-            frame_time = 0.15,
-        },
 
         texture = texture,
         coins = 0,

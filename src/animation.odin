@@ -3,7 +3,6 @@ package main
 import rl "vendor:raylib"
 import "core:fmt"
 
-
 Animation :: struct {
     row: i32,
     frame: i32,

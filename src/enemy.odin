@@ -3,19 +3,12 @@ package main
 import rl "vendor:raylib"
 
 Enemy :: struct {
+    using entity: Entity,
     start_position: rl.Vector2,
     patrol_distance: f32,
     moving_left: bool,
     previous_position: rl.Vector2,
-    velocity: rl.Vector2,
-    facing_right: bool,
-    animation_state: Animation_State,
-    animation: Animation,
-    position: rl.Vector2,
-    bounds: rl.Rectangle,
     texture: rl.Texture2D,
-    grounded: bool,
-    jumps_remaining: i32, 
     damage: i32,
     is_alive: bool,
     health: int,
@@ -26,27 +19,30 @@ init_enemy :: proc(texture: rl.Texture2D, position: rl.Vector2) -> Enemy
     enemy := Enemy{
         patrol_distance = 150,
         moving_left = true,
-
-        velocity = { 0, 0 },
         previous_position = position,
 
-        bounds = rl.Rectangle{
-            width = 32,
-            height = 32,
+        entity = Entity{
+            position = position,
+            velocity = { 0, 0 },
+
+            bounds = rl.Rectangle{
+                width = 32,
+                height = 32,
+            },
+            jumps_remaining = 0,
+            grounded = true,
+            facing_right = true,
+            animation_state = .Idle_Left,
+            animation = Animation{
+                row = 0,
+                frame = 0,
+                frame_count = 4,
+                frame_time = 0.15,
+            },
         },
-        jumps_remaining = 0,
-        grounded = true,
-        facing_right = true,
-        animation_state = .Idle_Left,
-        animation = Animation{
-            row = 0,
-            frame = 0,
-            frame_count = 4,
-            frame_time = 0.15,
-        },
+
         damage = 1,
         is_alive = true,
-        position = position,
         texture = texture,
         health = 1,
     }

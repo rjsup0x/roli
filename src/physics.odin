@@ -27,8 +27,8 @@ check_ground :: proc(object: ^$T, tile_map: ^Tile_Map)
     object_rect := rl.Rectangle{
         object.position.x,
         object.position.y,
-        32,
-        32,
+        object.bounds.width,
+        object.bounds.height,
     }
 
     object.grounded = false
@@ -39,7 +39,7 @@ check_ground :: proc(object: ^$T, tile_map: ^Tile_Map)
             // falling onto floor
             if object.velocity.y > 0 {
 
-                object.position.y = collision.y - 32
+                object.position.y = collision.y - object.bounds.height
 
                 land_object(object)
             }
