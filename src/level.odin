@@ -147,10 +147,10 @@ load_next_level :: proc(world: ^World, assets: ^Assets)
 
 		// testing by loading level1 again
     case 2:
-        map_path = "assets/maps/Level1.tmj"
+        map_path = "assets/maps/Level2.tmj"
 
-    // case 3:
-    //     map_path = "assets/maps/Level3.tmj"
+    case 3:
+        map_path = "assets/maps/Level2.tmj"
 
     case:
         fmt.println("Game completed!")

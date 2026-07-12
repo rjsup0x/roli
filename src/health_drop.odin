@@ -4,14 +4,23 @@ import rl"vendor:raylib"
 
 // has position and whether it was collected
 Health_Drop :: struct {
-    position: rl.Vector2,
+    using entity: Entity,
     collected: bool,
 }
 
 init_health_drop :: proc( position: rl.Vector2) -> Health_Drop
 {
     return Health_Drop{
-        position = position,
+        entity = Entity{
+            position = position,
+            velocity = { 0, 0 },
+
+            bounds = rl.Rectangle{
+                width = 32,
+                height = 32,
+            },
+        }
+
     }
 }
 

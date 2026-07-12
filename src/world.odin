@@ -89,8 +89,9 @@ update_world :: proc(world: ^World, input: ^Input, delta_time: f32, assets: ^Ass
 	// coins + health drops: update them, then collect any the player is touching
 	update_pickups(world, delta_time)
 
-	// update camera in world pos, player to track and delta time
-	update_camera(&world.camera, &world.player, delta_time)
+	// update camera in world pos, player to track, delta time, and the
+	// current level's tilemap (so it clamps to the real level width)
+	update_camera(&world.camera, &world.player, delta_time, &world.tile_map)
 
 	// check if it needs to change the level or nah
 	if check_exit(world) && !world.changing_level {

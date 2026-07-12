@@ -46,7 +46,7 @@ init_camera :: proc(player: ^Player) -> Camera_Controller
     return cam
 }
 
-update_camera :: proc(cam: ^Camera_Controller, player: ^Player, delta_time: f32)
+update_camera :: proc(cam: ^Camera_Controller, player: ^Player, delta_time: f32, tile_map: ^Tile_Map)
 {
     // Tunables
     PLAYER_WIDTH : f32 = 32
@@ -57,8 +57,10 @@ update_camera :: proc(cam: ^Camera_Controller, player: ^Player, delta_time: f32)
     STIFFNESS : f32 = 220
     DAMPING   : f32 = 26
 
-    // World size
-    WORLD_WIDTH : f32 = 1600
+    // World size - taken from the currently loaded level (in pixels)
+    // instead of a fixed guess, so clamping is correct on every map,
+    // not just whichever level was 1600px wide when this was written.
+    world_width := f32(tile_map.width * tile_map.tilewidth)
 
     // Camera-relative trigger lines
     left_outer  := cam.focus.x - OUTER
@@ -128,7 +130,16 @@ update_camera :: proc(cam: ^Camera_Controller, player: ^Player, delta_time: f32)
     half_view_width := f32(rl.GetScreenWidth()) * 0.5 / cam.camera.zoom
 
     min_x := half_view_width
-    max_x := WORLD_WIDTH - half_view_width
+    max_x := world_width - half_view_width
+
+    // Map narrower than the viewport (or not loaded) - just center it
+    // rather than clamping into a min_x > max_x range, which would
+    // otherwise fight itself every frame.
+    if max_x < min_x {
+        center_x := world_width * 0.5
+        min_x = center_x
+        max_x = center_x
+    }
 
     if cam.focus.x < min_x {
         cam.focus.x = min_x
