@@ -36,6 +36,8 @@ main :: proc() {
 	rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE)
 	defer rl.CloseWindow()
 
+	init_menus()
+
     // window and taskbar icon
     icon: rl.Image = rl.LoadImage("assets/textures/common/icon_heart.png")
     rl.SetWindowIcon(icon)
@@ -64,7 +66,7 @@ main :: proc() {
 	fmt.println(size_of(World))
 
 	// game loop
-	for !rl.WindowShouldClose() {
+	for !rl.WindowShouldClose() && !game.should_quit {
 		delta_time := rl.GetFrameTime()
 
 		// update world

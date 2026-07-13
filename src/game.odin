@@ -7,7 +7,8 @@ Game :: struct {
     world: World,
     assets: Assets,
     input: Input,
-    screen: Screen_state
+    screen: Screen_state,
+    should_quit: bool,
 }
 
 // create game state instance
@@ -47,55 +48,6 @@ restart :: proc(game: ^Game)
     // dereference - take the Game that game points to
     // reinit the games state - back to fresh
     game^ = init_game()
-}
-
-// update screens
-update_menu_screen :: proc(game: ^Game)
-{
-    update_menu()
-
-    if rl.IsKeyPressed(.ENTER) {
-        game.screen = .PLAYING
-    }
-}
-
-update_playing_screen :: proc(game: ^Game, delta_time: f32)
-{
-    if rl.IsKeyPressed(.ESCAPE) {
-        game.screen = .PAUSE
-            return
-        }
-        // while playing it should also keep updating
-        update_input(&game.input)
-         // update all game instance logic - players, enemies, other entities etc
-        update_world(&game.world, &game.input, delta_time, &game.assets)
-
-        // if the player has no more lives its gameover
-        if !game.world.player.is_alive {
-            game.screen = .GAMEOVER
-        }
-}
-
-update_pause_screen :: proc(game: ^Game)
-{
-    update_pause()
-
-    if rl.IsKeyPressed(.ENTER) {
-        game.screen = .PLAYING
-    }
-
-    if rl.IsKeyPressed(.ESCAPE){
-        game.screen = .MENU
-        restart(game)
-    }
-}
-
-update_gameover_screen :: proc(game: ^Game) {
-    update_gameover()
-
-    if rl.IsKeyPressed(.ENTER) {
-        restart(game)
-    }
 }
 
 // game update
