@@ -9,7 +9,6 @@ Input :: struct {
     // actions
     jump_pressed: bool,
     attack_pressed: bool,
-
     // optional held states
     jump_down: bool,
     attack_down: bool,

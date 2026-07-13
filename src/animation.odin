@@ -6,8 +6,8 @@ import "core:fmt"
 Animation :: struct {
     row: i32,
     frame: i32,
-
     frame_count: i32,
+    
     frame_time: f32,
     timer: f32,
 

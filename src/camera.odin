@@ -11,16 +11,12 @@ Camera_Direction :: enum {
 
 Camera_Controller :: struct {
     camera: rl.Camera2D,
-
     // Actual camera position
     focus: rl.Vector2,
-
     // Goal position
     target: rl.Vector2,
-
     // Spring velocity
     velocity: rl.Vector2,
-
     // Current push direction
     direction: Camera_Direction,
 }

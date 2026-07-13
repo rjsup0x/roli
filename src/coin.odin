@@ -5,6 +5,7 @@ import rl"vendor:raylib"
 // coin has a posiion and whether its collectd
 Coin_Drop :: struct {
     using entity: Entity,
+    
     collected: bool,
 }
 

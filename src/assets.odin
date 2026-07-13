@@ -17,8 +17,8 @@ load_assets :: proc() -> Assets
 	return Assets {
 		player_texture = rl.LoadTexture("assets/textures/level1/Player.png"),
 		enemy_texture  = rl.LoadTexture("assets/textures/level1/Player.png"),
-		heart_texture = rl.LoadTexture("assets/textures/level1/icon_heart.png"),
-		coin_texture = rl.LoadTexture("assets/textures/level1/Coin.png"),
+		heart_texture = rl.LoadTexture("assets/textures/common/icon_heart.png"),
+		coin_texture = rl.LoadTexture("assets/textures/common/Coin.png"),
 		// load other asset textures
 	}
 }

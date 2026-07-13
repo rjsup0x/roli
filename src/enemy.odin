@@ -4,14 +4,20 @@ import rl "vendor:raylib"
 
 Enemy :: struct {
     using entity: Entity,
+
     start_position: rl.Vector2,
-    patrol_distance: f32,
-    moving_left: bool,
     previous_position: rl.Vector2,
+
     texture: rl.Texture2D,
+
+    patrol_distance: f32,
+
     damage: i32,
-    is_alive: bool,
+
     health: int,
+    
+    is_alive: bool,
+    moving_left: bool,
 }
 
 init_enemy :: proc(texture: rl.Texture2D, position: rl.Vector2) -> Enemy 

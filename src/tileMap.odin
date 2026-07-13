@@ -13,50 +13,62 @@ Tile_Property :: struct {
 }
 
 Tile_Layer :: struct {
+    objects: []Map_Object,
+    properties: []Tile_Property,
     data: []int,
+
     width: int,
     height: int,
     id: int,
+
     name: string,
     layer_type: string `json:"type"`,
+    
     visible: bool,
-    properties: []Tile_Property,
-
-    objects: []Map_Object,
 }
 
 Tileset :: struct {
+    texture: rl.Texture2D,
+
     firstgid: int,
     columns: int,
-    image: string,
     imagewidth: int,
     imageheight: int,
     tilewidth: int,
     tileheight: int,
     tilecount: int,
-    texture: rl.Texture2D,
+
+    image: string,
 }
 
 Tile_Map :: struct {
+    layers: []Tile_Layer,
+    tilesets: []Tileset,
+
+    collisions: [dynamic]rl.Rectangle,
+
+    player_spawn: rl.Vector2,
+    exits: [dynamic]rl.Vector2,
+    
     arena: mem.Arena,
-    arena_memory: []byte,
+    
     width: int,
     height: int,
     tilewidth: int,
     tileheight: int,
-    layers: []Tile_Layer,
-    tilesets: []Tileset,
-    collisions: [dynamic]rl.Rectangle,
-    player_spawn: rl.Vector2,
-    exits: [dynamic]rl.Vector2,
+
+    arena_memory: []byte,
 }
 
 Map_Object :: struct {
     id: int,
-    name: string,
+    
     x: f32,
     y: f32,
+
+    name: string,
     object_type: string `json:"type"`,
+    
     point: bool,
 }
 

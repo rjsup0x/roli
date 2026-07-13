@@ -19,6 +19,7 @@ check_player_enemy_collisions :: proc(world: ^World, player: ^Player, enemies: ^
             continue
         }
 
+
         // when a player lands on the enemies head
         stomp := player.velocity.y > 0 && (player.position.y + player.bounds.height) <= (enemy.position.y + 10)
 

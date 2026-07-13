@@ -14,28 +14,29 @@
 
 # enemy
 - [] different types of enemies
-- [] drop lifes and items on death
+
+# heart health drop
+- [] update location when enemy is killed heart should bounce up and drop to ground
 
 # object
-- [] init an object (health struct) with its data and bring it into world as array of objects
 
 # screen
-- [] make each individual screen with update and click logic - add buttons that can be pressed and do something
+- [] click logic for menu & pause screens 
+- [] add buttons that can be pressed and do something
 
 # game
-- [] add music per screen (possiibly goes in world)
+- [] add music per screen [musicplayer]
 
 # world
-- [] dead enemy drops health or object (health, skill, etc)
-- [] hold array of objects
-- [] handle multiple level
 - [] add music per screen (possiibly goes in game)
 - [] sound effects - jump - double jump - death etc
 
+# paralax background
+- [] add different paralax images to the background of different levels
+- [] also add them to main menu etc
+
 # tilemap
 - [] tilemap can handle multiple objects states ("collidable" atm)
-- [] tilemap tells about multiple objects - spawn positions etc
-- [] tilemap object for end pos - resulting in change level (like a flag you reached)
 
 =================================================================================
 ===                      DONE                                                 ===
@@ -68,6 +69,17 @@
 - [x] enemy has health
 - [x] enemy can die
 - [x] player bouncing on enemy head kils enemy
+- [x] drop lifes and items on death
+
+# coin 
+- [x] coin object - droppable on enemy death
+- [x] init coin into world
+- [x] update coin w, physics, on ground, update the animation, draw
+
+# heart - health drop
+- [x] health drop hear - droppable object on enemy death
+- [x] init heart into world
+- [x] draw health heart
 
 # camera
 - [x] camera init + follow player
@@ -78,6 +90,8 @@
 # tilemap
 - [x] load tilemap by reading json
 - [x] tilemap can handle multiple layers
+- [x] tilemap tells about multiple objects - spawn positions etc
+- [x] tilemap object for end pos - resulting in change level (like a flag you reached)
 
 # physics
 - [x] player is grounded
@@ -92,6 +106,7 @@
 # screen
 - [x] make a screen state struct
 - [x] make individual screens for (.menu .pause . gameover)
+- [x] make each individual screen with update
 
 # game
 - [x] game owning the application lifetime
@@ -100,12 +115,18 @@
 - [x] handle different screen states
 - [x] handle screen navigations properly
 
+# object
+- [x] init an object (health struct) with its data and bring it into world as array of objects
+
 # world
 - [x] spawn player, enemy
 - [x] init camera to players world pos
 - [x] draw map from tilemap
 - [x] update world instance of player, enemeis, camera
 - [x] draw world instances of map, player, enemy
+- [x] dead enemy drops health or object (health, skill, etc)
+- [x] hold array of objects
+- [x] handle multiple level
 
 # ui
 - [x] players health is displayed by heart texture

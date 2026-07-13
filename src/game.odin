@@ -4,8 +4,8 @@ import rl "vendor:raylib"
 
 // owns the applications lifetime
 Game :: struct {
-    assets: Assets,
     world: World,
+    assets: Assets,
     input: Input,
     screen: Screen_state
 }

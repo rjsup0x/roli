@@ -37,7 +37,7 @@ main :: proc() {
 	defer rl.CloseWindow()
 
     // window and taskbar icon
-    icon: rl.Image = rl.LoadImage("assets/textures/level1/icon_heart.png")
+    icon: rl.Image = rl.LoadImage("assets/textures/common/icon_heart.png")
     rl.SetWindowIcon(icon)
     defer rl.UnloadImage(icon)
 
@@ -60,6 +60,8 @@ main :: proc() {
 			fmt.println("MEMORY INFO: No memory leaks detected!")
 		}
 	}
+
+	fmt.println(size_of(World))
 
 	// game loop
 	for !rl.WindowShouldClose() {

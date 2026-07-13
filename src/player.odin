@@ -5,19 +5,25 @@ import rl "vendor:raylib"
 // things the player can be or use
 Player :: struct {
     using entity: Entity,
-    active: bool,
+    
+    texture: rl.Texture2D,
+
     previous_position: rl.Vector2,
+
     scale: f32,
     radius: f32,
     rotation: f32,
     speed: f32,
+    damage_cooldown: f32,
+    
+    damage: i32,
+    
+    coins: int,
     lives: int,
     max_lives: int,
+
     is_alive: bool,
-    damage: i32,
-    damage_cooldown: f32,
-    texture: rl.Texture2D,
-    coins: int,
+    active: bool,
 }
 
 // init a player - into a world etc

@@ -6,14 +6,15 @@ import rl "vendor:raylib"
 
 World :: struct {
 	tile_map: Tile_Map,
-	// entities
+	// player
 	player:   Player,
+	//
+	camera:   Camera_Controller,
+	//
 	enemies:  [dynamic]Enemy,
 	// objects
 	coins: [dynamic]Coin_Drop,
 	health_drops: [dynamic]Health_Drop,
-	//
-	camera:   Camera_Controller,
 	// levels
 	level: int,
 	changing_level: bool,
@@ -21,7 +22,7 @@ World :: struct {
 
 // init the world data
 init_world :: proc(assets: ^Assets) -> World 
-{
+{	
     world := World {
         enemies = make([dynamic]Enemy, 0, 64),
         level = 1,
