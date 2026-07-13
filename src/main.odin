@@ -63,8 +63,6 @@ main :: proc() {
 		}
 	}
 
-	fmt.println(size_of(World))
-
 	// game loop
 	for !rl.WindowShouldClose() && !game.should_quit {
 		delta_time := rl.GetFrameTime()
@@ -75,7 +73,7 @@ main :: proc() {
 		rl.BeginDrawing()
 
 		rl.ClearBackground(rl.SKYBLUE)
-
+		
 		// draw world
 		draw_game(&game)
 

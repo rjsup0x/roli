@@ -56,41 +56,59 @@ selected_menu := 0
 selected_pause := 0
 selected_gameover := 0
 
-// DRAW and UPDATE - MENU SCREEN
-draw_menu :: proc()
+// joystick axis moves at the frametime
+menu_axis_timer: f32 = rl.GetFrameTime()
+
+menu_up_pressed :: proc() -> bool 
 {
-    FONT_SIZE :: 72
-    Y_CORD :: 150
-    title: cstring = "ROLI"
-    text_size := rl.MeasureText(title, FONT_SIZE)
-    half_screen := (rl.GetScreenWidth() / 2) - (text_size / 2)
+    if rl.IsKeyPressed(.UP) {
+        return true
+    }
 
-    rl.DrawText(title, half_screen, Y_CORD, FONT_SIZE, rl.RAYWHITE)
+    if rl.IsGamepadAvailable(0) &&
+       menu_axis_timer <= 0 {
 
-    // for object and index in menu_buttons
-    for button, i in menu_buttons {
-
-        // buttons starst gray
-        colour := rl.DARKGRAY
-
-        // current selected bnutton is blue
-        if i == selected_menu {
-            colour = rl.BLUE
+        if rl.GetGamepadAxisMovement(0, .LEFT_Y) < -0.5 {
+            menu_axis_timer = 0.2
+            return true
         }
+    }
 
-        // draw each button outlines
-        rl.DrawRectangleRec(button.rect, colour)
-        rl.DrawRectangleLinesEx(button.rect, 2, rl.RAYWHITE)
+    return false
+}
 
-        // draw each buttons text
-        rl.DrawText(
-            button.text,
-            i32(button.rect.x + 20),
-            i32(button.rect.y + 15),
-            30,
-            rl.RAYWHITE,
+menu_down_pressed :: proc() -> bool 
+{
+    if rl.IsKeyPressed(.DOWN) {
+        return true
+    }
+
+    if rl.IsGamepadAvailable(0) &&
+       menu_axis_timer <= 0 {
+
+        if rl.GetGamepadAxisMovement(0, .LEFT_Y) > 0.5 {
+            menu_axis_timer = 0.2
+            return true
+        }
+    }
+
+    return false
+}
+
+menu_select_pressed :: proc() -> bool 
+{
+    if rl.IsKeyPressed(.ENTER) {
+        return true
+    }
+
+    if rl.IsGamepadAvailable(0) {
+        return rl.IsGamepadButtonPressed(
+            0,
+            .RIGHT_FACE_DOWN,
         )
     }
+
+    return false
 }
 
 select_menu_option :: proc(game: ^Game)
@@ -141,10 +159,53 @@ select_gameover_option :: proc(game: ^Game)
     }
 }
 
+// DRAW and UPDATE - MENU SCREEN
+draw_menu :: proc()
+{
+    FONT_SIZE :: 72
+    Y_CORD :: 150
+    title: cstring = "ROLI"
+    text_size := rl.MeasureText(title, FONT_SIZE)
+    half_screen := (rl.GetScreenWidth() / 2) - (text_size / 2)
+
+    rl.DrawText(title, half_screen, Y_CORD, FONT_SIZE, rl.RAYWHITE)
+
+    // for object and index in menu_buttons
+    for button, i in menu_buttons {
+
+        // buttons starst gray
+        colour := rl.DARKGRAY
+
+        // current selected bnutton is blue
+        if i == selected_menu {
+            colour = rl.BLUE
+        }
+
+        // draw each button outlines
+        rl.DrawRectangleRec(button.rect, colour)
+        rl.DrawRectangleLinesEx(button.rect, 2, rl.RAYWHITE)
+
+        // draw each buttons text
+        rl.DrawText(
+            button.text,
+            i32(button.rect.x + 20),
+            i32(button.rect.y + 15),
+            30,
+            rl.RAYWHITE,
+        )
+    }
+}
+
 update_menu_screen :: proc(game: ^Game)
 {
+    // allow axis on jaystick to refresh to allow another movement
+    menu_axis_timer -= rl.GetFrameTime()
+    if menu_axis_timer < 0 {
+        menu_axis_timer = 0
+    }
+
     // keyboard navigation
-    if rl.IsKeyPressed(.DOWN) {
+    if menu_down_pressed() {
         selected_menu += 1
 
         // navigate throgh menu options - if you get to the end go back to start
@@ -154,7 +215,7 @@ update_menu_screen :: proc(game: ^Game)
     }
 
     // same but backwards
-    if rl.IsKeyPressed(.UP) {
+    if menu_up_pressed() {
         selected_menu -= 1
 
         if selected_menu < 0 {
@@ -180,7 +241,7 @@ update_menu_screen :: proc(game: ^Game)
     }
 
     // enter key
-    if rl.IsKeyPressed(.ENTER) {
+    if menu_select_pressed() {
         select_menu_option(game)
     }
 }
@@ -188,20 +249,40 @@ update_menu_screen :: proc(game: ^Game)
 // UPDATE PLAYING SCREEN
 update_playing_screen :: proc(game: ^Game, delta_time: f32)
 {
-    if rl.IsKeyPressed(.ESCAPE) {
+    // update parallax - it follows cam
+    game.parallax.layer1_x -= game.parallax.layer1_speed * delta_time
+    game.parallax.layer2_x -= game.parallax.layer2_speed * delta_time
+
+    tex1_width := f32(game.assets.background_layer1.width)
+
+    if game.parallax.layer1_x <= -tex1_width {
+        game.parallax.layer1_x += tex1_width
+    }
+
+    tex2_width := f32(game.assets.background_layer2.width)
+
+    if game.parallax.layer2_x <= -tex2_width {
+        game.parallax.layer2_x += tex2_width
+    }
+
+    if rl.IsKeyPressed(.ESCAPE) ||
+       rl.IsGamepadButtonPressed(0, .MIDDLE_RIGHT) {
+
         selected_pause = 0
         game.screen = .PAUSE
-            return
-        }
-        // while playing it should also keep updating
-        update_input(&game.input)
-         // update all game instance logic - players, enemies, other entities etc
-        update_world(&game.world, &game.input, delta_time, &game.assets)
+        return
+    }
 
-        // if the player has no more lives its gameover
-        if !game.world.player.is_alive {
-            game.screen = .GAMEOVER
-        }
+    // while playing it should also keep updating
+    update_input(&game.input)
+
+    // update all game instance logic - players, enemies, other entities etc
+    update_world(&game.world, &game.input, delta_time, &game.assets)
+
+    // if the player has no more lives its gameover
+    if !game.world.player.is_alive {
+        game.screen = .GAMEOVER
+    }
 }
 
 // DRAW and UPDATE GAMEOVER SCREEN
@@ -243,7 +324,7 @@ draw_gameover :: proc()
 
 update_gameover_screen :: proc(game: ^Game) {
     // keyboard navigation
-    if rl.IsKeyPressed(.DOWN) {
+    if menu_down_pressed() {
         selected_gameover += 1
 
         // navigate throgh menu options - if you get to the end go back to start
@@ -253,7 +334,7 @@ update_gameover_screen :: proc(game: ^Game) {
     }
 
     // same but backwards
-    if rl.IsKeyPressed(.UP) {
+    if menu_up_pressed() {
         selected_gameover -= 1
 
         if selected_gameover < 0 {
@@ -279,7 +360,7 @@ update_gameover_screen :: proc(game: ^Game) {
     }
 
     // enter key
-    if rl.IsKeyPressed(.ENTER) {
+    if menu_select_pressed() {
         select_gameover_option(game)
     }
 }
@@ -324,7 +405,7 @@ draw_pause :: proc()
 update_pause_screen :: proc(game: ^Game)
 {
     // keyboard navigation
-    if rl.IsKeyPressed(.DOWN) {
+    if menu_down_pressed() {
         selected_pause += 1
 
         // navigate throgh menu options - if you get to the end go back to start
@@ -334,7 +415,7 @@ update_pause_screen :: proc(game: ^Game)
     }
 
     // same but backwards
-    if rl.IsKeyPressed(.UP) {
+    if menu_up_pressed() {
         selected_pause -= 1
 
         if selected_pause < 0 {
@@ -359,7 +440,7 @@ update_pause_screen :: proc(game: ^Game)
         }
     }
     // enter key
-    if rl.IsKeyPressed(.ENTER) {
+    if menu_select_pressed() {
         select_pause_option(game)
     }
 }

@@ -9,6 +9,7 @@ Game :: struct {
     input: Input,
     screen: Screen_state,
     should_quit: bool,
+    parallax: Parallax,
 }
 
 // create game state instance
@@ -24,6 +25,11 @@ init_game :: proc() -> Game
 
     // set screen state to menu
     game.screen = .MENU
+
+    game.parallax = Parallax{
+        layer1_speed = 20,
+        layer2_speed = 60,
+    }
 
     return game
 }
@@ -83,6 +89,7 @@ draw_game :: proc(game: ^Game)
             draw_menu()
             
         case .PLAYING:
+            draw_parallax(game)
             draw_world(&game.world, &game.assets)
 
         case .GAMEOVER:

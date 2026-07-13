@@ -16,13 +16,12 @@
 - [] different types of enemies
 
 # heart health drop
-- [] update location when enemy is killed heart should bounce up and drop to ground
+- [] update location when enemy is killed heart should bounce up and drop to ground (needs improvements)
 
 # object
 
 # screen
-- [] click logic for menu & pause screens 
-- [] add buttons that can be pressed and do something
+- [] backgrounds, parralax?
 
 # game
 - [] add music per screen [musicplayer]
@@ -107,6 +106,9 @@
 - [x] make a screen state struct
 - [x] make individual screens for (.menu .pause . gameover)
 - [x] make each individual screen with update
+- [x] click logic for menu & pause screens 
+- [x] add buttons that can be pressed and do something
+- [x] make screen navigation work on controller
 
 # game
 - [x] game owning the application lifetime
