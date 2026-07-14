@@ -253,16 +253,16 @@ update_playing_screen :: proc(game: ^Game, delta_time: f32)
     game.parallax.layer1_x -= game.parallax.layer1_speed * delta_time
     game.parallax.layer2_x -= game.parallax.layer2_speed * delta_time
 
-    tex1_width := f32(game.assets.background_layer1.width)
+    texture1_width := f32(game.assets.background_layer1.width)
 
-    if game.parallax.layer1_x <= -tex1_width {
-        game.parallax.layer1_x += tex1_width
+    if game.parallax.layer1_x <= -texture1_width {
+        game.parallax.layer1_x += texture1_width
     }
 
-    tex2_width := f32(game.assets.background_layer2.width)
+    texture2_width := f32(game.assets.background_layer2.width)
 
-    if game.parallax.layer2_x <= -tex2_width {
-        game.parallax.layer2_x += tex2_width
+    if game.parallax.layer2_x <= -texture2_width {
+        game.parallax.layer2_x += texture2_width
     }
 
     if rl.IsKeyPressed(.ESCAPE) ||
@@ -423,7 +423,6 @@ update_pause_screen :: proc(game: ^Game)
         }
     }
 
-    // mouse hover
     mouse := rl.GetMousePosition()
 
     // for all buttons in menu_buttons
@@ -440,6 +439,10 @@ update_pause_screen :: proc(game: ^Game)
         }
     }
     // enter key
+    if menu_select_pressed() {
+        select_pause_option(game)
+    }
+
     if menu_select_pressed() {
         select_pause_option(game)
     }

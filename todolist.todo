@@ -21,18 +21,15 @@
 # object
 
 # screen
-- [] backgrounds, parralax?
 
 # game
-- [] add music per screen [musicplayer]
+- [x?] add music per screen [musicplayer] (added music but need to change it to fit game)
 
 # world
-- [] add music per screen (possiibly goes in game)
 - [] sound effects - jump - double jump - death etc
 
 # paralax background
-- [] add different paralax images to the background of different levels
-- [] also add them to main menu etc
+- [] also add them to main menu etc ( only in game atm)
 
 # tilemap
 - [] tilemap can handle multiple objects states ("collidable" atm)
@@ -109,6 +106,7 @@
 - [x] click logic for menu & pause screens 
 - [x] add buttons that can be pressed and do something
 - [x] make screen navigation work on controller
+- [x] backgrounds, parralax? - done parallax could improve it
 
 # game
 - [x] game owning the application lifetime
@@ -116,6 +114,7 @@
 - [x] game draw
 - [x] handle different screen states
 - [x] handle screen navigations properly
+- [x] added music player that handles state of screen for which music should play
 
 # object
 - [x] init an object (health struct) with its data and bring it into world as array of objects
@@ -129,6 +128,10 @@
 - [x] dead enemy drops health or object (health, skill, etc)
 - [x] hold array of objects
 - [x] handle multiple level
+- [x] add music per screen (possiibly goes in game)
+
+# parallax background
+- [x] add different paralax images to the background of different levels
 
 # ui
 - [x] players health is displayed by heart texture

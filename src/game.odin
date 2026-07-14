@@ -10,6 +10,7 @@ Game :: struct {
     screen: Screen_state,
     should_quit: bool,
     parallax: Parallax,
+    music_system: MusicSystem,
 }
 
 // create game state instance
@@ -26,6 +27,8 @@ init_game :: proc() -> Game
     // set screen state to menu
     game.screen = .MENU
 
+    game.music_system = init_music_system()
+
     game.parallax = Parallax{
         layer1_speed = 20,
         layer2_speed = 60,
@@ -41,6 +44,7 @@ deinit_game :: proc(game: ^Game)
 {
     // unload_map(&game.map)
     deinit_world(&game.world)
+    deinit_music_system(&game.music_system)
     unload_assets(&game.assets)
 
     // remove games state
@@ -59,6 +63,7 @@ restart :: proc(game: ^Game)
 // game update
 update_game :: proc(game: ^Game, delta_time: f32) 
 {
+    update_music_system(&game.music_system, game.screen)
     // TODO: ensure all the correct buttons for the screen navigations
     // TODO: acutally update the screens logic
     switch game.screen {
