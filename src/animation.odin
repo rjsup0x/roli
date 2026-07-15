@@ -4,14 +4,15 @@ import rl "vendor:raylib"
 import "core:fmt"
 
 Animation :: struct {
-    row: i32,
-    frame: i32,
+    // mathcing spritesheet data so it can read and progress through it
+    row:         i32,
+    frame:       i32,
     frame_count: i32,
-    
-    frame_time: f32,
-    timer: f32,
-
-    loop: bool,
+    // how fast it can progress through the animations sheet
+    frame_time:  f32,
+    timer:       f32,
+    // whether to loop the progress on teh anim sheet
+    loop:        bool,
 }
 
 // spritesheet should match this
@@ -26,33 +27,32 @@ Animation_State :: enum {
 
 update_animation :: proc(object: ^$T, delta_time: f32) 
 {
-        // Choose animation
-        // if object not on ground (hes jumping) so play jumping animations per direction
-        if !object.grounded {
+    // Choose animation
+    // if object not on ground (hes jumping) so play jumping animations per direction
+    if !object.grounded {
 
-            if object.facing_right {
-                set_animation(object, .Jump_Right)
-            } else {
-                set_animation(object, .Jump_Left)
-            }
-
-        // if object on ground but moving - play running animation per direction
-        } else if abs(object.velocity.x) > 0 {
-
-            if object.facing_right {
-                set_animation(object, .Run_Right)
-            } else {
-                set_animation(object, .Run_Left)
-            }
-        // object on ground but not moving - play idle animation per direction
+        if object.facing_right {
+            set_animation(object, .Jump_Right)
         } else {
-
-            if object.facing_right {
-                set_animation(object, .Idle_Right)
-            } else {
-                set_animation(object, .Idle_Left)
-            }
+            set_animation(object, .Jump_Left)
         }
+
+    // if object on ground but moving - play running animation per direction
+    } else if abs(object.velocity.x) > 0 {
+
+        if object.facing_right {
+            set_animation(object, .Run_Right)
+        } else {
+            set_animation(object, .Run_Left)
+        }
+        // object on ground but not moving - play idle animation per direction
+    } else {
+        if object.facing_right {
+            set_animation(object, .Idle_Right)
+        } else {
+            set_animation(object, .Idle_Left)
+        }
+    }
 
     // Advance frames
     object.animation.timer += delta_time

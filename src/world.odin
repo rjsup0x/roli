@@ -5,18 +5,18 @@ import "core:fmt"
 import rl "vendor:raylib"
 
 World :: struct {
-	tile_map: Tile_Map,
+	tile_map: 		Tile_Map,
 	// player
-	player:   Player,
+	player:   		Player,
 	//
-	camera:   Camera_Controller,
+	camera:   		Camera_Controller,
 	//
-	enemies:  [dynamic]Enemy,
+	enemies:  		[dynamic]Enemy,
 	// objects
-	coins: [dynamic]Coin_Drop,
-	health_drops: [dynamic]Health_Drop,
+	coins: 			[dynamic]Coin_Drop,
+	health_drops: 	[dynamic]Health_Drop,
 	// levels
-	level: int,
+	level: 			int,
 	changing_level: bool,
 }
 

@@ -4,13 +4,14 @@ import rl "vendor:raylib"
 
 // owns the applications lifetime
 Game :: struct {
-    world: World,
-    assets: Assets,
-    input: Input,
-    screen: Screen_state,
-    should_quit: bool,
-    parallax: Parallax,
-    music_system: MusicSystem,
+    // game controls lifetime of things meccesary to exist as a game
+    world:          World,
+    assets:         Assets,
+    input:          Input,
+    screen:         Screen_state,
+    should_quit:    bool,
+    parallax:       Parallax,
+    music_system:   MusicSystem,
 }
 
 // create game state instance
@@ -81,6 +82,9 @@ update_game :: proc(game: ^Game, delta_time: f32)
 
         case .GAMEOVER:
             update_gameover_screen(game)
+        
+        case .SETTINGS:
+            update_settings_screen(game)
     }
 
 }
@@ -102,5 +106,8 @@ draw_game :: proc(game: ^Game)
 
         case .PAUSE:
             draw_pause()
+
+        case .SETTINGS:
+            draw_settings_screen()
     }
 }

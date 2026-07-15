@@ -10,15 +10,16 @@ Camera_Direction :: enum {
 }
 
 Camera_Controller :: struct {
-    camera: rl.Camera2D,
+    // init cam
+    camera:     rl.Camera2D,
     // Actual camera position
-    focus: rl.Vector2,
+    focus:      rl.Vector2,
     // Goal position
-    target: rl.Vector2,
+    target:     rl.Vector2,
     // Spring velocity
-    velocity: rl.Vector2,
+    velocity:   rl.Vector2,
     // Current push direction
-    direction: Camera_Direction,
+    direction:  Camera_Direction,
 }
 
 init_camera :: proc(player: ^Player) -> Camera_Controller 

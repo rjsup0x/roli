@@ -21,6 +21,9 @@
 # object
 
 # screen
+- [] add volume control to settings screen 
+- [] make volume control in (draw_settings screen) a slider - using an asset
+- [] in (update_settings_screen) the lofic to move the slider and set the volume level
 
 # game
 - [x?] add music per screen [musicplayer] (added music but need to change it to fit game)

@@ -3,21 +3,22 @@ package main
 import rl "vendor:raylib"
 
 Enemy :: struct {
-    using entity: Entity,
-
-    start_position: rl.Vector2,
-    previous_position: rl.Vector2,
-
-    texture: rl.Texture2D,
-
-    patrol_distance: f32,
-
-    damage: i32,
-
-    health: int,
-    
-    is_alive: bool,
-    moving_left: bool,
+    // using entity physics
+    using entity:       Entity,
+    // store how enemy moves
+    start_position:     rl.Vector2,
+    previous_position:  rl.Vector2,
+    // enemy tex
+    texture:            rl.Texture2D,
+    // hwo far enemy patrol ai can move
+    patrol_distance:    f32,
+    // damage enemy can give
+    damage:             i32,
+    // health enemy has
+    health:             int,
+    // store enemy lifetime
+    is_alive:           bool,
+    moving_left:        bool,
 }
 
 init_enemy :: proc(texture: rl.Texture2D, position: rl.Vector2) -> Enemy 

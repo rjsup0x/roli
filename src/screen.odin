@@ -6,7 +6,8 @@ Screen_state :: enum {
     MENU,
     PLAYING,
     GAMEOVER,
-    PAUSE
+    PAUSE,
+    SETTINGS,
 }
 
 Button :: struct {
@@ -446,4 +447,14 @@ update_pause_screen :: proc(game: ^Game)
     if menu_select_pressed() {
         select_pause_option(game)
     }
+}
+
+draw_settings_screen :: proc()
+{
+
+}
+
+update_settings_screen :: proc(game: ^Game)
+{
+
 }

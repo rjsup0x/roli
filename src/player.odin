@@ -4,26 +4,27 @@ import rl "vendor:raylib"
 
 // things the player can be or use
 Player :: struct {
-    using entity: Entity,
-    
-    texture: rl.Texture2D,
-
-    previous_position: rl.Vector2,
-
-    scale: f32,
-    radius: f32,
-    rotation: f32,
-    speed: f32,
-    damage_cooldown: f32,
-    
-    damage: i32,
-    
-    coins: int,
-    lives: int,
-    max_lives: int,
-
-    is_alive: bool,
-    active: bool,
+    // using entity data for physics
+    using entity:       Entity,
+    // tex used for player
+    texture:            rl.Texture2D,
+    // store players last position
+    previous_position:  rl.Vector2,
+    // player sprite attributes
+    scale:              f32,
+    radius:             f32,
+    rotation:           f32,
+    speed:              f32,
+    damage_cooldown:    f32,
+    // player damage
+    damage:             i32,
+    // player attributes
+    coins:              int,
+    lives:              int,
+    max_lives:          int,
+    // player management
+    is_alive:           bool,
+    active:             bool,
 }
 
 // init a player - into a world etc

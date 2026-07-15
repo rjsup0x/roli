@@ -4,9 +4,9 @@ import rl"vendor:raylib"
 
 // coin has a posiion and whether its collectd
 Coin_Drop :: struct {
-    using entity: Entity,
-    
-    collected: bool,
+    // using entity physics
+    using entity:   Entity,
+    collected:      bool,
 }
 
 init_coin :: proc(position: rl.Vector2) -> Coin_Drop 

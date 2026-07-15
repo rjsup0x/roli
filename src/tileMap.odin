@@ -7,71 +7,76 @@ import "core:strings"
 import "core:mem"
 
 Tile_Property :: struct {
-    name: string,
-    property_type: string `json:"type"`,
-    value: bool,
+    name:           string,
+    property_type:  string `json:"type"`,
+    value:          bool,
 }
 
 Tile_Layer :: struct {
-    objects: []Map_Object,
+    // arrays of objects
+    objects:    []Map_Object,
     properties: []Tile_Property,
-    data: []int,
-
-    width: int,
-    height: int,
-    id: int,
-
-    name: string,
+    data:       []int,
+    // object dimensions
+    width:      int,
+    height:     int,
+    id:         int,
+    // object values
+    name:       string,
     layer_type: string `json:"type"`,
-    
-    visible: bool,
+    // object visable
+    visible:    bool,
 }
 
 Tileset :: struct {
-    texture: rl.Texture2D,
-
-    firstgid: int,
-    columns: int,
-    imagewidth: int,
-    imageheight: int,
-    tilewidth: int,
-    tileheight: int,
-    tilecount: int,
-
-    image: string,
+    texture:        rl.Texture2D,
+    // tileset data
+    firstgid:       int,
+    columns:        int,
+    imagewidth:     int,
+    imageheight:    int,
+    tilewidth:      int,
+    tileheight:     int,
+    tilecount:      int,
+    // tileset image data
+    image:          string,
 }
 
 Tile_Map :: struct {
-    layers: []Tile_Layer,
-    tilesets: []Tileset,
-
-    collisions: [dynamic]rl.Rectangle,
-
-    player_spawn: rl.Vector2,
-    exits: [dynamic]rl.Vector2,
-    
-    arena: mem.Arena,
-    
-    width: int,
-    height: int,
-    tilewidth: int,
-    tileheight: int,
-
-    arena_memory: []byte,
+    // tilemap layers
+    layers:         []Tile_Layer,
+    // tilesets
+    tilesets:       []Tileset,
+    // collision tiles
+    collisions:     [dynamic]rl.Rectangle,
+    // tilemap objects
+    player_spawn:   rl.Vector2,
+    exits:          [dynamic]rl.Vector2,
+    // allocated mem
+    arena:          mem.Arena,
+    // tilemap dimensions
+    width:          int,
+    height:         int,
+    tilewidth:      int,
+    tileheight:     int,
+    // alloc mem
+    arena_memory:   []byte,
 }
 
 Map_Object :: struct {
-    id: int,
-    
-    x: f32,
-    y: f32,
-
-    name: string,
-    object_type: string `json:"type"`,
-    
-    point: bool,
+    // object id
+    id:             int,
+    // object positions
+    x:              f32,
+    y:              f32,
+    // object data
+    name:           string,
+    object_type:    string `json:"type"`,
+    // object points
+    point:          bool,
 }
 
+// allocate the size of the memory arena used to create tilemap
 MAP_ARENA_SIZE :: 8 * 1024 * 1024
 
 load_map :: proc(map_path: string) -> (Tile_Map, bool)

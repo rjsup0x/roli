@@ -4,14 +4,14 @@ import rl "vendor:raylib"
 
 Input :: struct {
     // movement on x
-    move_x: f32,
+    move_x:         f32,
 
     // actions
-    jump_pressed: bool,
+    jump_pressed:   bool,
     attack_pressed: bool,
     // optional held states
-    jump_down: bool,
-    attack_down: bool,
+    jump_down:      bool,
+    attack_down:    bool,
 }
 
 update_input :: proc(input: ^Input) 

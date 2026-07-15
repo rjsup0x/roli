@@ -4,8 +4,9 @@ import rl"vendor:raylib"
 
 // has position and whether it was collected
 Health_Drop :: struct {
-    using entity: Entity,
-    collected: bool,
+    // object uses entity physics
+    using entity:   Entity,
+    collected:      bool,
 }
 
 init_health_drop :: proc( position: rl.Vector2) -> Health_Drop

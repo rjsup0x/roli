@@ -32,6 +32,8 @@ main :: proc() {
 	SCREEN_HEIGHT :: 600.0
 	TITLE :: "ROLI"
 
+	rl.SetConfigFlags({.MSAA_4X_HINT, .VSYNC_HINT})
+
 	// window size and title
 	rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE)
 	defer rl.CloseWindow()

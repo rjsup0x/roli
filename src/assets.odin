@@ -4,23 +4,24 @@ import "core:fmt"
 import rl "vendor:raylib"
 
 Assets :: struct {
-	player_texture: rl.Texture2D,
-	enemy_texture:  rl.Texture2D,
-	heart_texture: rl.Texture2D,
-	coin_texture: rl.Texture2D,
-	background_layer1: rl.Texture2D,
-	background_layer2: rl.Texture2D,
-	// terrain: rl.Texture2D,
-	// enemy etc
+	player_texture: 	rl.Texture2D,
+	enemy_texture:  	rl.Texture2D,
+	heart_texture: 		rl.Texture2D,
+	coin_texture: 		rl.Texture2D,
+	background_layer1: 	rl.Texture2D,
+	background_layer2: 	rl.Texture2D,
 }
 
 load_assets :: proc() -> Assets 
 {
 	return Assets {
+		// entities
 		player_texture = rl.LoadTexture("assets/textures/level1/Player.png"),
 		enemy_texture  = rl.LoadTexture("assets/textures/level1/Player.png"),
+		// objects
 		heart_texture = rl.LoadTexture("assets/textures/common/icon_heart.png"),
 		coin_texture = rl.LoadTexture("assets/textures/common/Coin.png"),
+		// game parallax bg
 		background_layer1 = rl.LoadTexture("assets/textures/common/Background1.png"),
 		background_layer2 = rl.LoadTexture("assets/textures/common/Background2.png"),
 		// load other asset textures

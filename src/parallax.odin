@@ -3,11 +3,12 @@ package main
 import rl"vendor:raylib"
 
 Parallax :: struct {
-    layer1_x: f32,
-    layer2_x: f32,
-
-    layer1_speed: f32,
-    layer2_speed: f32,
+    // both layers of the parallax moves on x axis
+    layer1_x:       f32,
+    layer2_x:       f32,
+    // both layers of the parallax move at diff speeds
+    layer1_speed:   f32,
+    layer2_speed:   f32,
 }
 
 draw_parallax :: proc(game: ^Game) {

@@ -3,9 +3,12 @@ package main
 import rl"vendor:raylib"
 
 MusicSystem :: struct {
-    tracks: [Screen_state]rl.Music,
+    // track playing depends on cyrrent_state (which screen is being used)
+    tracks:         [Screen_state]rl.Music,
+    // gold the current screen state
     current_screen: Screen_state,
-    volume: f32,
+    // control the vol of music
+    volume:         f32,
 }
 
 init_music_system :: proc() -> MusicSystem
